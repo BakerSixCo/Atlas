@@ -54,7 +54,7 @@ const schema = people.map((p) => ({
       <div class="people">
         {people.map((p) => (
           <article class="person">
-            <div class="person-img">{p.img && <Image src={p.img} alt={`${p.name}, ${p.role}`} widths={[400, 700, 1000]} sizes="(min-width: 1000px) 35vw, 90vw" formats={['avif', 'webp']} />}</div>
+            <div class="person-img">{p.img && <Image src={p.img} alt={`${p.name}, ${p.role}`} widths={[400, 700, 1000]} sizes="(min-width: 1000px) 35vw, 90vw" format="webp" />}</div>
             <div class="person-body">
               <h3 class="name">{p.name}</h3>
               <p class="role">{[p.rank, p.role].filter(Boolean).join(' · ')}</p>

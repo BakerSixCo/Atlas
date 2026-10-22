@@ -129,7 +129,7 @@ const noBreak = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').re
       <div class="wrap instructor-grid">
         <div class="instructor-photo" data-reveal>
           <div class="glow" aria-hidden="true"></div>
-          {headPhoto && <Image src={headPhoto} alt={`${head.entry.name}, ${head.entry.role}`} widths={[400, 700, 1000]} sizes="(min-width: 1000px) 40vw, 90vw" formats={['avif', 'webp']} />}
+          {headPhoto && <Image src={headPhoto} alt={`${head.entry.name}, ${head.entry.role}`} widths={[400, 700, 1000]} sizes="(min-width: 1000px) 40vw, 90vw" format="webp" />}
         </div>
         <div>
           <p class="kicker">Meet your instructor</p>

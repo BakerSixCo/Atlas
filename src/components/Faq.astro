@@ -1,6 +1,6 @@
 ---
 // Native <details> accordion: accessible and works without JavaScript.
-interface Props { items: { question: string; answer: string }[] }
+interface Props { items: readonly { question: string; answer: string }[] }
 const { items } = Astro.props;
 ---
 <div class="faq">
