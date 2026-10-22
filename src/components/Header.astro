@@ -8,13 +8,17 @@ const { signupUrl, signupLabel = 'Sign up' } = Astro.props;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const nav = [
   { href: '/schedule', label: 'Schedule' },
+  { href: '/programs', label: 'Programs' },
+  { href: '/programs/beginners', label: 'Start here' },
   { href: '/about', label: 'About' },
-  { href: '/handbook', label: 'Handbook' },
   { href: '/faq', label: 'FAQ' },
-  { href: '/news', label: 'News' },
   { href: '/contact', label: 'Contact' },
 ];
-const isCurrent = (href: string) => path === href || path.startsWith(href + '/');
+// Highlight only the most specific matching item (so /programs/beginners lights "Start here", not "Programs").
+const current = nav
+  .filter((n) => path === n.href || path.startsWith(n.href + '/'))
+  .sort((a, b) => b.href.length - a.href.length)[0]?.href;
+const isCurrent = (href: string) => href === current;
 ---
 <header class="site-header" data-header>
   <div class="wrap bar">

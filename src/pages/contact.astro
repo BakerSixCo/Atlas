@@ -10,7 +10,7 @@ const [settings, classes] = await Promise.all([getSettings(), getClasses()]);
 const tel = settings.phone.replace(/[^\d+]/g, '');
 const week = byDay(classes);
 ---
-<Base title="Contact & Directions" description={`Call, text or email Atlas Jiu-Jitsu. ${settings.locationNote}, ${settings.addressLine1}, ${settings.addressLine2}.`}>
+<Base title="Contact & Directions | Atlas Jiu-Jitsu, Meridian, ID" breadcrumbs={[{ name: 'Contact', path: '/contact' }]} description={`Call, text or email Atlas Jiu-Jitsu, a no-gi BJJ academy ${settings.locationNote?.toLowerCase()} at ${settings.addressLine1}, ${settings.addressLine2}. Directions and class times.`}>
   <PageHero kicker="Contact" title="Come <span class='accent'>train.</span>" lede="Questions about classes, memberships, or your first visit? Reach out — a real person will get back to you." />
 
   <section class="section section--tight">

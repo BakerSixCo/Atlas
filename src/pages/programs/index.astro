@@ -1,0 +1,41 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Photo from '../../components/Photo.astro';
+import { getPrograms } from '../../lib/content';
+
+const programs = await getPrograms();
+---
+<Base
+  title="No-Gi Jiu-Jitsu & Wrestling Programs | Atlas Jiu-Jitsu Meridian"
+  description="No-gi Brazilian Jiu-Jitsu, adult wrestling, and open mat in Meridian, Idaho. Beginner-friendly classes for every level at Atlas Jiu-Jitsu."
+  breadcrumbs={[{ name: 'Programs', path: '/programs' }]}
+>
+  <PageHero kicker="Programs" title="Find your <span class='accent'>starting point.</span>" lede="Every class is open to all levels. Pick a program, check the times, and come train." />
+  <section class="section section--tight">
+    <div class="wrap grid">
+      {programs.map((p) => (
+        <a class="program" href={`/programs/${p.slug}`}>
+          <div class="img"><Photo src={p.entry.heroImage} alt={p.entry.heroImageAlt} sizes="(min-width: 1000px) 50vw, 100vw" widths={[480, 800, 1200]} /></div>
+          <div class="body">
+            <p class="kicker">{p.entry.kicker}</p>
+            <h2>{p.entry.title}</h2>
+            <p class="muted">{p.entry.cardText}</p>
+            <span class="link-arrow">Learn more</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .grid { display: grid; gap: 18px; grid-template-columns: 1fr; }
+  @media (min-width: 800px) { .grid { grid-template-columns: 1fr 1fr; } }
+  .program { display: grid; grid-template-rows: auto 1fr; text-decoration: none; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: border-color 0.2s, transform 0.3s var(--ease); }
+  .program:hover { border-color: var(--red); transform: translateY(-3px); }
+  .img { aspect-ratio: 16 / 9; overflow: hidden; }
+  .img :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .body { padding: clamp(22px, 3vw, 32px); display: grid; gap: 12px; align-content: start; }
+  h2 { font-size: clamp(1.6rem, 3.4vw, 2.4rem); }
+</style>

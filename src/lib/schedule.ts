@@ -80,3 +80,13 @@ export function fmtDays(days: Day[]): string {
 export function todayISO(): string {
   return new Intl.DateTimeFormat('en-CA', { timeZone: TIMEZONE }).format(new Date());
 }
+
+/** "2026-11-14T10:00" (gym-local, as stored by the CMS) → "2026-11-14T10:00:00-07:00". */
+export function withBoiseOffset(local: string): string {
+  const base = local.length === 16 ? `${local}:00` : local.slice(0, 19);
+  const asUTC = new Date(`${base}Z`);
+  const tzName = new Intl.DateTimeFormat('en-US', { timeZone: TIMEZONE, timeZoneName: 'longOffset' })
+    .formatToParts(asUTC).find((p) => p.type === 'timeZoneName')?.value ?? 'GMT-07:00';
+  const offset = tzName.replace('GMT', '') || '+00:00';
+  return `${base}${offset}`;
+}

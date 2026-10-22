@@ -2,12 +2,14 @@
 import Photo from './Photo.astro';
 interface Props { kicker: string; title: string; lede?: string; image?: string | null; imageAlt?: string }
 const { kicker, title, lede, image, imageAlt = '' } = Astro.props;
+// Keep hyphenated words ("jiu-jitsu", "no-gi") from splitting across lines. Skips text inside tags.
+const heading = title.replace(/(^|>)([^<]*)/g, (_, a: string, text: string) => a + text.replace(/(\S+-\S+)/g, '<span class="nowrap">$1</span>'));
 ---
 <section class:list={['page-hero', { 'has-img': image }]}>
   {image && <div class="bg"><Photo src={image} alt={imageAlt} eager sizes="100vw" /></div>}
   <div class="wrap inner">
     <p class="kicker">{kicker}</p>
-    <h1 set:html={title} />
+    <h1 set:html={heading} />
     {lede && <p class="lede">{lede}</p>}
     <slot />
   </div>

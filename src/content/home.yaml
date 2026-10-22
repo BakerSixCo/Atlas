@@ -22,27 +22,6 @@ pillars:
     body: >-
       Your membership includes The Mecca Gym — a 24,000 sq ft performance
       facility with weights, conditioning, showers and sauna.
-programs:
-  - title: No-Gi Jiu-Jitsu
-    body: >-
-      Fast, fluid and highly applicable to both sport and self-defense. Without
-      the gi, training emphasizes control, speed and technique — and minimizes
-      grip dependency, making it a dynamic choice for every athlete.
-    image: /src/assets/images/photos/class-13.jpg
-    imageAlt: Students drilling a no-gi position on the mats
-  - title: Adult All Levels
-    body: >-
-      Total beginners to advanced students, on the same mat. Every class combines
-      structured instruction, live drilling and controlled sparring. You don't
-      need to be in shape or "tough" to start — just willing to learn.
-    image: /src/assets/images/photos/class-07.jpg
-    imageAlt: Two training partners shake hands before a round
-  - title: Wrestling
-    body: >-
-      Tuesday nights are for takedowns. Build the standup, scrambles and top
-      pressure that make your jiu-jitsu dangerous from the very first grip.
-    image: /src/assets/images/photos/class-11.jpg
-    imageAlt: Two students hand-fighting for a takedown
 gallery:
   - image: /src/assets/images/photos/class-20.jpg
     alt: Head instructor Chase Riddick teaching the class seated on the mat

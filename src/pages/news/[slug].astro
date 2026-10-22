@@ -1,7 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Photo from '../../components/Photo.astro';
-import { getPosts, renderMarkdoc } from '../../lib/content';
+import { getPosts, getSettings, renderMarkdoc } from '../../lib/content';
+import { withBoiseOffset } from '../../lib/schedule';
 import { resolveImage } from '../../lib/images';
 import { getImage } from 'astro:assets';
 
@@ -16,11 +17,32 @@ const html = renderMarkdoc((await post.entry.body()).node);
 const cover = resolveImage(post.entry.cover);
 const og = cover ? (await getImage({ src: cover, width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src : undefined;
 const date = post.entry.date ? new Date(`${post.entry.date}T12:00:00Z`) : null;
-const schema = [{
+const settings = await getSettings();
+const ev = post.entry.event.discriminant ? post.entry.event.value : null;
+const schema: object[] = [{
   '@context': 'https://schema.org', '@type': 'BlogPosting', headline: post.entry.title,
   datePublished: post.entry.date, description: post.entry.summary,
-  publisher: { '@id': 'https://atlas-jiujitsu.com/#gym' },
+  ...(og ? { image: new URL(og, Astro.site).href } : {}),
+  author: { '@type': 'Organization', name: 'Atlas Jiu-Jitsu', url: Astro.site!.href },
+  publisher: { '@id': new URL('/#gym', Astro.site).href },
 }];
+if (ev?.start) {
+  schema.push({
+    '@context': 'https://schema.org', '@type': 'Event',
+    name: post.entry.title, description: post.entry.summary,
+    startDate: withBoiseOffset(ev.start),
+    ...(ev.end ? { endDate: withBoiseOffset(ev.end) } : {}),
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    location: ev.location
+      ? { '@type': 'Place', name: ev.location, address: ev.location }
+      : { '@type': 'Place', name: `Atlas Jiu-Jitsu (${settings.locationNote})`, address: { '@type': 'PostalAddress', streetAddress: settings.addressLine1, addressLocality: 'Meridian', addressRegion: 'ID', addressCountry: 'US' } },
+    organizer: { '@type': 'Organization', name: 'Atlas Jiu-Jitsu', url: Astro.site!.href },
+    ...(og ? { image: [new URL(og, Astro.site).href] } : {}),
+    ...(ev.price || ev.registerUrl ? { offers: { '@type': 'Offer', url: ev.registerUrl || new URL(`/news/${post.slug}`, Astro.site).href, ...(ev.price ? { price: ev.price.replace(/[^0-9.]/g, '') || '0', priceCurrency: 'USD' } : {}), availability: 'https://schema.org/InStock' } } : {}),
+  });
+}
+const fmtEvent = (iso: string) => new Date(withBoiseOffset(iso)).toLocaleString('en-US', { timeZone: 'America/Boise', weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 ---
 <Base title={post.entry.title} description={post.entry.summary || post.entry.title} image={og} schema={schema}>
   <article class="section section--tight">
@@ -29,6 +51,14 @@ const schema = [{
       {date && <time datetime={post.entry.date}>{date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</time>}
       <h1>{post.entry.title}</h1>
       {post.entry.summary && <p class="lede">{post.entry.summary}</p>}
+      {ev?.start && (
+        <div class="card event">
+          <p><strong>When</strong> {fmtEvent(ev.start)}{ev.end && ` – ${fmtEvent(ev.end)}`}</p>
+          <p><strong>Where</strong> {ev.location || `${settings.locationNote}, ${settings.addressLine1}, ${settings.addressLine2}`}</p>
+          {ev.price && <p><strong>Price</strong> {ev.price}</p>}
+          {ev.registerUrl && <a class="btn btn--sm" href={ev.registerUrl} rel="noopener" target="_blank">Register</a>}
+        </div>
+      )}
       {cover && <div class="cover"><Photo src={cover} alt={post.entry.coverAlt} eager sizes="(min-width: 900px) 860px, 100vw" /></div>}
       <div class="prose" set:html={html} />
     </div>
@@ -42,5 +72,7 @@ const schema = [{
   .back::before { content: '←'; }
   time { color: var(--red-text); font-weight: 650; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem; margin-top: 16px; }
   h1 { font-size: clamp(2.2rem, 6vw, 4.2rem); }
+  .event { display: grid; gap: 6px; justify-items: start; }
+  .event strong { display: inline-block; min-width: 64px; color: var(--red-text); }
   .cover { border-radius: var(--radius); overflow: hidden; margin-block: 12px; }
 </style>

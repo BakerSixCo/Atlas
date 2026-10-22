@@ -1,0 +1,131 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Faq from '../../components/Faq.astro';
+import Icon from '../../components/Icon.astro';
+import { getPrograms, getSettings, renderMarkdoc } from '../../lib/content';
+import { getClasses, fmtDays, fmtRange } from '../../lib/schedule';
+import { resolveImage } from '../../lib/images';
+import { getImage } from 'astro:assets';
+
+export async function getStaticPaths() {
+  return (await getPrograms()).map((p) => ({ params: { slug: p.slug }, props: { slug: p.slug } }));
+}
+
+const [programs, settings, allClasses] = await Promise.all([getPrograms(), getSettings(), getClasses()]);
+const program = programs.find((p) => p.slug === Astro.props.slug)!;
+const e = program.entry;
+const html = renderMarkdoc((await e.body()).node);
+const classes = e.program === 'none' ? [] : allClasses.filter((c) => c.program === e.program);
+const others = programs.filter((p) => p.slug !== program.slug);
+const hero = resolveImage(e.heroImage);
+const og = hero ? (await getImage({ src: hero, width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src : undefined;
+const url = new URL(`/programs/${program.slug}`, Astro.site).href;
+
+const schema: object[] = [{
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: `${e.title} classes`,
+  serviceType: e.title,
+  description: e.seoDescription || e.intro,
+  url,
+  provider: { '@id': new URL('/#gym', Astro.site).href },
+  areaServed: (settings.areaServed ?? []).map((name) => ({ '@type': 'City', name: `${name}, ID` })),
+}];
+if (e.faq.length) {
+  schema.push({
+    '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: e.faq.map((f) => ({ '@type': 'Question', name: f.question, acceptedAnswer: { '@type': 'Answer', text: f.answer } })),
+  });
+}
+---
+<Base
+  title={e.seoTitle || `${e.title} | Meridian, ID`}
+  description={e.seoDescription || e.intro}
+  image={og}
+  schema={schema}
+  breadcrumbs={[{ name: 'Programs', path: '/programs' }, { name: e.title, path: `/programs/${program.slug}` }]}
+>
+  <PageHero kicker={e.kicker} title={e.heading || e.title} lede={e.intro} image={e.heroImage} imageAlt={e.heroImageAlt}>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol><li><a href="/">Home</a></li><li><a href="/programs">Programs</a></li><li aria-current="page">{e.title}</li></ol>
+    </nav>
+    <div class="btn-row">
+      {settings.signupUrl && <a class="btn" href={settings.signupUrl} rel="noopener" target="_blank">{settings.signupLabel}</a>}
+      <a class="btn btn--ghost" href="/schedule"><Icon name="calendar" />Full schedule</a>
+    </div>
+  </PageHero>
+
+  {e.highlights.length > 0 && (
+    <section class="section section--tight">
+      <div class="wrap">
+        <ul class="highlights">
+          {e.highlights.map((h) => <li class="card"><h2 class="h3">{h.title}</h2><p class="muted">{h.body}</p></li>)}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <section class="section section--tight">
+    <div class="wrap layout">
+      <article class="prose" set:html={html} />
+      {classes.length > 0 && (
+        <aside class="card times" aria-labelledby="times-h">
+          <h2 id="times-h" class="h3">Class times</h2>
+          <ul>
+            {classes.map((c) => (
+              <li data-program={c.program}>
+                <strong>{c.title}</strong>
+                <span><Icon name="clock" />{fmtDays(c.days)} · {fmtRange(c.start, c.end)}</span>
+              </li>
+            ))}
+          </ul>
+          <a class="link-arrow" href="/schedule">Full weekly schedule</a>
+          <p class="muted small">{settings.locationNote}, {settings.addressLine1}, {settings.addressLine2}</p>
+        </aside>
+      )}
+    </div>
+  </section>
+
+  {e.faq.length > 0 && (
+    <section class="section section--surface">
+      <div class="wrap narrow">
+        <div class="section-head"><p class="kicker">Questions</p><h2>{e.title}: FAQ</h2></div>
+        <Faq items={e.faq} />
+      </div>
+    </section>
+  )}
+
+  <section class="section section--tight">
+    <div class="wrap">
+      <h2 class="h3 more-h">More programs</h2>
+      <ul class="more">
+        {others.map((p) => <li><a class="card" href={`/programs/${p.slug}`}><strong>{p.entry.title}</strong><span class="muted">{p.entry.cardText}</span></a></li>)}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .crumbs ol { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.85rem; color: var(--muted); }
+  .crumbs li + li::before { content: '/'; margin-right: 6px; opacity: 0.5; }
+  .crumbs a { color: var(--muted); text-decoration: none; }
+  .crumbs a:hover { color: var(--text); }
+  .h3 { font-family: var(--font-display); font-variation-settings: 'wdth' 115; font-weight: 800; font-size: 1.25rem; line-height: 1.15; text-transform: none; }
+  .highlights { list-style: none; padding: 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .highlights .card { display: grid; gap: 10px; align-content: start; border-top: 3px solid var(--red); }
+  .layout { display: grid; gap: 40px; grid-template-columns: 1fr; align-items: start; }
+  @media (min-width: 1000px) { .layout { grid-template-columns: 1fr 360px; gap: 72px; } .times { position: sticky; top: calc(var(--header-h) + 24px); } }
+  .prose :global(h2:first-child) { margin-top: 0; }
+  .times { display: grid; gap: 16px; }
+  .times ul { list-style: none; padding: 0; display: grid; gap: 10px; }
+  .times li { display: grid; gap: 4px; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--surface-2); border-left: 4px solid var(--prog); }
+  .times li span { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+  .times :global(svg) { width: 15px; height: 15px; }
+  .small { font-size: 0.85rem; }
+  .narrow { max-width: 880px; }
+  .more-h { margin-bottom: 16px; }
+  .more { list-style: none; padding: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .more a { display: grid; gap: 6px; height: 100%; text-decoration: none; transition: border-color 0.2s; }
+  .more a:hover { border-color: var(--red); }
+</style>

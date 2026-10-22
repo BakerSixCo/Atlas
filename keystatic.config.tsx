@@ -65,12 +65,60 @@ export default config({
     navigation: {
       Schedule: ['classes', 'schedule'],
       'News & Alerts': ['posts', 'settings'],
-      Pages: ['home', 'about', 'handbook'],
+      Pages: ['programs', 'home', 'about', 'handbook'],
       People: ['instructors', 'testimonials', 'faq'],
     },
   },
 
   collections: {
+    programs: collection({
+      label: 'Program pages',
+      slugField: 'title',
+      path: 'src/content/programs/*',
+      format: { contentField: 'body' },
+      entryLayout: 'content',
+      columns: ['title', 'order'],
+      schema: {
+        title: fields.slug({
+          name: { label: 'Program name', description: 'e.g. "No-Gi Jiu-Jitsu"' },
+          slug: { label: 'Page URL', description: 'Lowercase words with dashes. Changing it breaks old links.' },
+        }),
+        order: fields.integer({ label: 'Sort order', defaultValue: 10 }),
+        program: fields.select({
+          label: 'Schedule program',
+          description: 'Classes with this program are listed on the page automatically.',
+          options: [{ label: 'None (no class list)', value: 'none' }, ...PROGRAMS],
+          defaultValue: 'none',
+        }),
+        seoTitle: fields.text({
+          label: 'Google title',
+          description: 'Shown in Google results and browser tabs. ~50–60 characters. Put the main search phrase first.',
+          validation: { length: { max: 70 } },
+        }),
+        seoDescription: fields.text({
+          label: 'Google description',
+          description: 'The 1–2 sentence snippet under the title in Google. ~140–160 characters.',
+          multiline: true,
+          validation: { length: { max: 180 } },
+        }),
+        kicker: fields.text({ label: 'Small heading above title' }),
+        heading: fields.text({ label: 'Page headline (H1)' }),
+        intro: fields.text({ label: 'Intro paragraph', multiline: true }),
+        cardText: fields.text({ label: 'Card text', description: 'Short blurb shown on the Programs page and home page.', multiline: true }),
+        heroImage: photo('Hero photo', 'photos'),
+        heroImageAlt: fields.text({ label: 'Hero photo description' }),
+        highlights: fields.array(
+          fields.object({ title: fields.text({ label: 'Title' }), body: fields.text({ label: 'Text', multiline: true }) }),
+          { label: 'Highlights', itemLabel: (p) => p.fields.title.value },
+        ),
+        faq: fields.array(
+          fields.object({ question: fields.text({ label: 'Question' }), answer: fields.text({ label: 'Answer', multiline: true }) }),
+          { label: 'Questions for this page', description: 'These can appear as expandable answers in Google.', itemLabel: (p) => p.fields.question.value },
+        ),
+        body: fields.markdoc({ label: 'Page content', extension: 'md' }),
+      },
+    }),
+
     classes: collection({
       label: 'Classes',
       slugField: 'title',
@@ -116,6 +164,19 @@ export default config({
         cover: photo('Cover photo', 'posts'),
         coverAlt: fields.text({ label: 'Cover photo description', description: 'Describe the photo for screen readers and Google.' }),
         draft: fields.checkbox({ label: 'Draft (hidden from the site)', defaultValue: false }),
+        event: fields.conditional(
+          fields.checkbox({ label: 'This post is an event (seminar, open mat, tournament…)', defaultValue: false }),
+          {
+            true: fields.object({
+              start: fields.datetime({ label: 'Starts', validation: { isRequired: true } }),
+              end: fields.datetime({ label: 'Ends' }),
+              location: fields.text({ label: 'Location (leave blank for Atlas)' }),
+              registerUrl: fields.url({ label: 'Registration link (optional)' }),
+              price: fields.text({ label: 'Price (optional)', description: 'e.g. "Free", "$40"' }),
+            }),
+            false: fields.empty(),
+          },
+        ),
         body: fields.markdoc({
           label: 'Body',
           extension: 'md',
@@ -166,6 +227,18 @@ export default config({
         instagram: fields.url({ label: 'Instagram URL' }),
         facebook: fields.url({ label: 'Facebook URL (optional)' }),
         youtube: fields.url({ label: 'YouTube URL (optional)' }),
+        googleBusinessUrl: fields.url({
+          label: 'Google Business Profile link',
+          description: 'Your listing\'s "Share" link from Google Maps. Strengthens local search.',
+        }),
+        reviewUrl: fields.url({ label: 'Google review link', description: 'From Google Business Profile → "Ask for reviews".' }),
+        latitude: fields.text({ label: 'Latitude', description: 'Right-click the gym in Google Maps → copy the first number.' }),
+        longitude: fields.text({ label: 'Longitude', description: 'The second number from the same right-click.' }),
+        areaServed: fields.array(fields.text({ label: 'City' }), {
+          label: 'Areas served',
+          description: 'Nearby cities you draw students from.',
+          itemLabel: (p) => p.value,
+        }),
         hostGymName: fields.text({ label: 'Host gym name' }),
         hostGymUrl: fields.url({ label: 'Host gym website' }),
       },
@@ -208,15 +281,6 @@ export default config({
             body: fields.text({ label: 'Text', multiline: true }),
           }),
           { label: 'What makes us different', itemLabel: (p) => p.fields.title.value },
-        ),
-        programs: fields.array(
-          fields.object({
-            title: fields.text({ label: 'Title' }),
-            body: fields.text({ label: 'Text', multiline: true }),
-            image: photo('Photo', 'photos'),
-            imageAlt: fields.text({ label: 'Photo description' }),
-          }),
-          { label: 'Programs', itemLabel: (p) => p.fields.title.value },
         ),
         gallery: fields.array(
           fields.object({

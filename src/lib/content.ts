@@ -24,6 +24,11 @@ export async function getInstructors() {
   return all.sort((a, b) => (a.entry.order ?? 10) - (b.entry.order ?? 10));
 }
 
+export async function getPrograms() {
+  const all = await reader.collections.programs.all();
+  return all.sort((a, b) => (a.entry.order ?? 10) - (b.entry.order ?? 10));
+}
+
 export async function getPosts() {
   const all = await reader.collections.posts.all();
   return all

@@ -8,7 +8,16 @@ const JS_DAY: Record<Day, number> = { sun: 0, mon: 1, tue: 2, wed: 3, thu: 4, fr
 
 const esc = (s: string) => s.replace(/\\/g, '\\\\').replace(/;/g, '\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
 // RFC 5545: fold lines longer than 75 octets.
-const fold = (line: string) => line.match(/.{1,73}/g)!.join('\r\n ');
+const fold = (line: string) => {
+  const out: string[] = [];
+  let cur = '', bytes = 0;
+  for (const ch of line) {
+    const n = new TextEncoder().encode(ch).length;
+    if (bytes + n > 73) { out.push(cur); cur = ''; bytes = 0; }
+    cur += ch; bytes += n;
+  }
+  return [...out, cur].join('\r\n ');
+};
 
 /** First date on/after `from` that falls on any of `days`, as YYYYMMDD. */
 function firstDate(from: Date, days: Day[]): string {

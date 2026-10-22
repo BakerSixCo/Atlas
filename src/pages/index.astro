@@ -8,16 +8,17 @@ import LiveStatus from '../components/LiveStatus.astro';
 import ScheduleData from '../components/ScheduleData.astro';
 import Faq from '../components/Faq.astro';
 import PostCard from '../components/PostCard.astro';
-import { getHome, getSettings, getFaq, getTestimonials, getInstructors, getPosts, getAbout, getScheduleNotes, renderMarkdoc } from '../lib/content';
+import { getHome, getSettings, getFaq, getTestimonials, getInstructors, getPosts, getAbout, getScheduleNotes, getPrograms, renderMarkdoc } from '../lib/content';
 import { getClasses } from '../lib/schedule';
 import { resolveImage } from '../lib/images';
 import poster from '../assets/images/photos/meet-chase-poster.jpg';
 import figure from '../assets/images/brand/figure.png';
 import { getImage } from 'astro:assets';
 
-const [home, settings, faq, testimonials, instructors, posts, about, notes, classes] = await Promise.all([
-  getHome(), getSettings(), getFaq(), getTestimonials(), getInstructors(), getPosts(), getAbout(), getScheduleNotes(), getClasses(),
+const [home, settings, faq, testimonials, instructors, posts, about, notes, classes, allPrograms] = await Promise.all([
+  getHome(), getSettings(), getFaq(), getTestimonials(), getInstructors(), getPosts(), getAbout(), getScheduleNotes(), getClasses(), getPrograms(),
 ]);
+const programs = allPrograms.filter((p) => p.entry.program !== 'none');
 const head = instructors[0];
 const headBio = head ? renderMarkdoc((await head.entry.bio()).node) : '';
 const headPhoto = resolveImage(head?.entry.photo);
@@ -88,16 +89,18 @@ const noBreak = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').re
       <div class="section-head">
         <p class="kicker">Programs</p>
         <h2>Built for the mat.</h2>
+        <p class="lede">Never trained before? <a class="link-arrow" href="/programs/beginners">Start with the beginner's guide</a></p>
       </div>
       <div class="programs">
-        {home.programs.map((p) => (
-          <article class="program" data-reveal>
-            <div class="program-img"><Photo src={p.image} alt={p.imageAlt} sizes="(min-width: 1000px) 33vw, (min-width: 640px) 50vw, 100vw" widths={[480, 800, 1200]} /></div>
+        {programs.map((p) => (
+          <a class="program" href={`/programs/${p.slug}`} data-reveal>
+            <div class="program-img"><Photo src={p.entry.heroImage} alt={p.entry.heroImageAlt} sizes="(min-width: 1000px) 33vw, (min-width: 640px) 50vw, 100vw" widths={[480, 800, 1200]} /></div>
             <div class="program-body">
-              <h3>{p.title}</h3>
-              <p class="muted">{p.body}</p>
+              <h3>{p.entry.title}</h3>
+              <p class="muted">{p.entry.cardText}</p>
+              <span class="link-arrow">Learn more</span>
             </div>
-          </article>
+          </a>
         ))}
       </div>
     </div>
@@ -296,9 +299,10 @@ const noBreak = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').re
   /* Programs */
   .programs { display: grid; gap: 18px; grid-template-columns: 1fr; }
   @media (min-width: 760px) { .programs { grid-template-columns: repeat(3, 1fr); } }
-  .program { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
+  .program { text-decoration: none; transition: border-color 0.2s; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
   .program-img { aspect-ratio: 4 / 3; overflow: hidden; }
   .program-img :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease); }
+  .program:hover { border-color: var(--red); }
   .program:hover .program-img :global(img) { transform: scale(1.04); }
   .program-body { padding: 24px; display: grid; gap: 10px; align-content: start; }
 

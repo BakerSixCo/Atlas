@@ -24,7 +24,7 @@ const html = renderMarkdoc(node, {
   nodes: { heading: { ...Markdoc.nodes.heading, attributes: { ...Markdoc.nodes.heading.attributes, id: { type: String } } } },
 });
 ---
-<Base title="Student Handbook" description="The Atlas Jiu-Jitsu student handbook: mat etiquette, no-gi gear requirements, hygiene, training guidelines, rank and promotion, and code of conduct.">
+<Base title="Student Handbook: Gear, Etiquette & Rules | Atlas Jiu-Jitsu" breadcrumbs={[{ name: 'Handbook', path: '/handbook' }]} description="The Atlas Jiu-Jitsu student handbook: mat etiquette, no-gi gear requirements, hygiene, training guidelines, rank and promotion, and code of conduct.">
   <PageHero kicker="Student handbook" title="Train the <span class='accent'>Atlas way.</span>" lede={handbook.intro}>
     {handbook.pdf && <div class="btn-row"><a class="btn btn--ghost btn--sm" href={handbook.pdf} download><Icon name="download" />Download PDF</a></div>}
   </PageHero>

@@ -13,6 +13,7 @@ const year = new Date().getFullYear();
     <div class="col brand-col">
       <Image src={lockup} alt="Atlas Jiu-Jitsu" width={150} densities={[1, 2]} />
       <p class="muted">No egos. Just jiu-jitsu.<br />No-gi Brazilian Jiu-Jitsu in Meridian, Idaho.</p>
+      {s.areaServed && s.areaServed.length > 0 && <p class="muted served">Training students from {s.areaServed.join(', ').replace(/, ([^,]*)$/, ' and $1')}.</p>}
       <div class="social">
         {s.instagram && <a href={s.instagram} rel="noopener" target="_blank"><Icon name="instagram" label="Instagram" /></a>}
         {s.facebook && <a href={s.facebook} rel="noopener" target="_blank"><Icon name="facebook" label="Facebook" /></a>}
@@ -39,10 +40,14 @@ const year = new Date().getFullYear();
       <h2 class="h">Explore</h2>
       <ul>
         <li><a href="/schedule">Class schedule</a></li>
+        <li><a href="/programs/no-gi-jiu-jitsu">No-gi jiu-jitsu</a></li>
+        <li><a href="/programs/wrestling">Adult wrestling</a></li>
+        <li><a href="/programs/beginners">Beginners: start here</a></li>
         <li><a href="/about">About &amp; instructors</a></li>
         <li><a href="/handbook">Student handbook</a></li>
         <li><a href="/faq">FAQ</a></li>
         <li><a href="/news">News &amp; events</a></li>
+        {s.reviewUrl && <li><a href={s.reviewUrl} rel="noopener" target="_blank">Leave us a Google review</a></li>}
         {s.hostGymUrl && <li><a href={s.hostGymUrl} rel="noopener" target="_blank">{s.hostGymName}</a></li>}
       </ul>
     </div>
@@ -59,6 +64,7 @@ const year = new Date().getFullYear();
   @media (min-width: 720px) { .grid { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 1000px) { .grid { grid-template-columns: 1.5fr 1fr 1.2fr 1fr; } }
   .brand-col img { width: 150px; margin-bottom: 18px; }
+  .served { margin-top: 10px; font-size: 0.9rem; }
   .h {
     font-size: 0.8rem; letter-spacing: 0.18em; color: var(--muted);
     font-variation-settings: 'wdth' 112; font-weight: 700; margin-bottom: 16px;

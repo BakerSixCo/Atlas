@@ -13,5 +13,16 @@ signupLabel: Sign up
 instagram: https://www.instagram.com/atlasjiujitsu90/
 facebook: ''
 youtube: ''
+googleBusinessUrl: ''
+reviewUrl: ''
+latitude: ''
+longitude: ''
+areaServed:
+  - Meridian
+  - Boise
+  - Eagle
+  - Star
+  - Kuna
+  - Nampa
 hostGymName: The Mecca Gym
 hostGymUrl: https://themeccagym.com/

@@ -59,6 +59,13 @@ npm run preview  # run the build in the real Cloudflare runtime
 - `astro.config.mjs` → `redirects`: 301s from the old WordPress URLs so Google rankings carry over
 - `archive/`: everything scraped from the old WordPress site (copy, photos, logos, handbook PDF)
 
+### SEO
+
+- **Program pages** (`/programs/*`) target the searches people actually make ("no-gi jiu-jitsu Meridian", "adult wrestling Meridian", "jiu-jitsu for beginners"). Each one has its own Google title and description fields in the admin, so keep the main phrase first.
+- **Structured data:** every page tells Google the gym's name, address, phone, class hours, service area and founder. Program pages add Service + FAQ markup. News posts marked as events produce Event listings.
+- **Fill in once** under **Site settings**: the Google Business Profile link, the review link, and latitude/longitude.
+- Old WordPress URLs 301-redirect to the new pages; `sitemap-index.xml` is generated on every build.
+
 ### Security
 
 - The public site is static HTML, with no database, PHP or plugins to exploit.

@@ -5,10 +5,11 @@ import WeekGrid from '../components/WeekGrid.astro';
 import LiveStatus from '../components/LiveStatus.astro';
 import ScheduleData from '../components/ScheduleData.astro';
 import Icon from '../components/Icon.astro';
-import { getScheduleNotes, getSettings } from '../lib/content';
+import { getScheduleNotes, getSettings, getPrograms } from '../lib/content';
 import { getClasses, fmtRange, fmtDays, PROGRAM_LABELS, LEVEL_LABELS, todayISO } from '../lib/schedule';
 
-const [classes, notes, settings] = await Promise.all([getClasses(), getScheduleNotes(), getSettings()]);
+const [classes, notes, settings, programPages] = await Promise.all([getClasses(), getScheduleNotes(), getSettings(), getPrograms()]);
+const pageFor = (program: string) => programPages.find((p) => p.entry.program === program);
 const programs = [...new Set(classes.map((c) => c.program))];
 const today = todayISO();
 const closures = notes.closures
@@ -17,18 +18,11 @@ const closures = notes.closures
 const fmtDate = (iso: string) =>
   new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
 
-const schema = classes.map((c) => ({
-  '@context': 'https://schema.org',
-  '@type': 'Course',
-  name: c.title,
-  description: c.description,
-  provider: { '@id': 'https://atlas-jiujitsu.com/#gym' },
-}));
 ---
 <Base
   title="Jiu-Jitsu Class Schedule | Meridian, ID"
+  breadcrumbs={[{ name: 'Schedule', path: '/schedule' }]}
   description={`Weekly no-gi jiu-jitsu and wrestling class schedule at Atlas Jiu-Jitsu in Meridian, Idaho. ${classes.length} weekly classes, all levels welcome.`}
-  schema={schema}
 >
   <ScheduleData classes={classes} closures={notes.closures} />
   <PageHero kicker="Class schedule" title="Train <span class='accent'>this week.</span>" lede={notes.intro}>
@@ -83,6 +77,7 @@ const schema = classes.map((c) => ({
             <p class="when"><Icon name="clock" />{fmtDays(c.days)} · {fmtRange(c.start, c.end)}</p>
             {c.description && <p class="muted">{c.description}</p>}
             {c.instructor && <p class="who">Coach: {c.instructor}</p>}
+            {pageFor(c.program) && <a class="link-arrow" href={`/programs/${pageFor(c.program)!.slug}`}>About {pageFor(c.program)!.entry.title}</a>}
           </article>
         ))}
       </div>
