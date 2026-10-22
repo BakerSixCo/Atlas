@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Page not found" description="This page doesn't exist.">
+  <section class="section">
+    <div class="wrap nf">
+      <p class="kicker">404</p>
+      <h1>You got <span class="accent">swept.</span></h1>
+      <p class="lede">That page doesn't exist — it may have moved when we rebuilt the site.</p>
+      <div class="btn-row"><a class="btn" href="/">Home</a><a class="btn btn--ghost" href="/schedule">Class schedule</a></div>
+    </div>
+  </section>
+</Base>
+<style>.nf { display: grid; gap: 22px; justify-items: start; min-height: 50vh; align-content: center; }</style>

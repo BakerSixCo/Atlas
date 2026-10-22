@@ -1,0 +1,27 @@
+---
+import Photo from './Photo.astro';
+interface Props {
+  post: { slug: string; entry: { title: string; date: string | null; summary: string; cover: string | null; coverAlt: string } };
+}
+const { post } = Astro.props;
+const date = post.entry.date ? new Date(`${post.entry.date}T12:00:00Z`) : null;
+---
+<article class="post">
+  <a href={`/news/${post.slug}`}>
+    {post.entry.cover && <div class="img"><Photo src={post.entry.cover} alt={post.entry.coverAlt} sizes="(min-width: 1000px) 33vw, 100vw" widths={[480, 800, 1200]} /></div>}
+    <div class="body">
+      {date && <time datetime={post.entry.date}>{date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</time>}
+      <h3>{post.entry.title}</h3>
+      {post.entry.summary && <p class="muted">{post.entry.summary}</p>}
+    </div>
+  </a>
+</article>
+
+<style>
+  .post a { display: grid; height: 100%; text-decoration: none; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: border-color 0.2s, transform 0.3s var(--ease); }
+  .post a:hover { border-color: var(--red); transform: translateY(-3px); }
+  .img { aspect-ratio: 16 / 9; overflow: hidden; }
+  .img :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .body { padding: 22px; display: grid; gap: 8px; align-content: start; }
+  time { font-size: 0.8rem; color: var(--red-text); font-weight: 650; text-transform: uppercase; letter-spacing: 0.1em; }
+</style>

@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Faq from '../components/Faq.astro';
+import { getFaq, getSettings } from '../lib/content';
+
+const [faq, settings] = await Promise.all([getFaq(), getSettings()]);
+const tel = settings.phone.replace(/[^\d+]/g, '');
+const schema = [{
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.question, acceptedAnswer: { '@type': 'Answer', text: f.answer } })),
+}];
+---
+<Base title="FAQ" description="Answers to common questions about starting no-gi jiu-jitsu at Atlas Jiu-Jitsu in Meridian, Idaho: experience, what to wear, class length, safety and gym access." schema={schema}>
+  <PageHero kicker="FAQ" title="Questions? <span class='accent'>Answered.</span>" lede="Everything new students ask before their first class." />
+  <section class="section section--tight">
+    <div class="wrap narrow">
+      <Faq items={faq} />
+      <p class="more muted">Didn't find your answer? <a href={`tel:${tel}`}>Call or text {settings.phone}</a> or <a href={`mailto:${settings.email}`}>email us</a>.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .narrow { max-width: 880px; }
+  .more { margin-top: 32px; }
+  .more a { color: var(--red-text); }
+</style>

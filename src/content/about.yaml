@@ -1,0 +1,31 @@
+storyTitle: Martial arts should be for everyone.
+story: |-
+  Atlas Jiu-Jitsu was founded on a simple idea: martial arts should be for everyone.
+
+  We started with a passion for Brazilian Jiu-Jitsu and a mission to share its life-changing benefits with our community. From adults finding balance and stress relief to competitors chasing their next medal, Atlas has become a home for growth, friendship, and perseverance.
+
+  Every class, every roll, and every challenge on the mats is an opportunity to become a better version of yourself — and we're here to guide you on that journey.
+valuesIntro: >-
+  At Atlas, jiu-jitsu is more than a martial art — it's a mindset. Every time we
+  step on the mat, we show up with the same values that shape how we train, how
+  we treat each other, and how we grow.
+values:
+  - title: Respect over rank
+    body: The white belt on their first day gets the same respect as the black belt. Always.
+  - title: Stay humble, train hard
+    body: Leave the ego at the door. Show up, do the work, and get a little better every class.
+  - title: Be a good training partner
+    body: Tap early, train with control, and match your partner's intensity. We improve together.
+gymIntro: >-
+  Atlas trains inside The Mecca Gym, and every membership comes with full 24/7
+  access — a complete environment built for performance and recovery.
+gymPerks:
+  - title: 24,000 sq ft facility
+    body: A massive space built for serious training and community.
+  - title: Specialized equipment
+    body: Premium machines and free weights for every style of training.
+  - title: Showers & sauna
+    body: Clean, comfortable facilities for post-training recovery.
+  - title: Expert personal training
+    body: Certified coaches dedicated to your goals.
+gymPhoto: /src/assets/images/gym/mecca-floor.jpg

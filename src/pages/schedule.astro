@@ -1,0 +1,119 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import WeekGrid from '../components/WeekGrid.astro';
+import LiveStatus from '../components/LiveStatus.astro';
+import ScheduleData from '../components/ScheduleData.astro';
+import Icon from '../components/Icon.astro';
+import { getScheduleNotes, getSettings } from '../lib/content';
+import { getClasses, fmtRange, fmtDays, PROGRAM_LABELS, LEVEL_LABELS, todayISO } from '../lib/schedule';
+
+const [classes, notes, settings] = await Promise.all([getClasses(), getScheduleNotes(), getSettings()]);
+const programs = [...new Set(classes.map((c) => c.program))];
+const today = todayISO();
+const closures = notes.closures
+  .filter((c) => c.date && (c.endDate || c.date)! >= today)
+  .sort((a, b) => a.date!.localeCompare(b.date!));
+const fmtDate = (iso: string) =>
+  new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
+
+const schema = classes.map((c) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Course',
+  name: c.title,
+  description: c.description,
+  provider: { '@id': 'https://atlas-jiujitsu.com/#gym' },
+}));
+---
+<Base
+  title="Jiu-Jitsu Class Schedule | Meridian, ID"
+  description={`Weekly no-gi jiu-jitsu and wrestling class schedule at Atlas Jiu-Jitsu in Meridian, Idaho. ${classes.length} weekly classes, all levels welcome.`}
+  schema={schema}
+>
+  <ScheduleData classes={classes} closures={notes.closures} />
+  <PageHero kicker="Class schedule" title="Train <span class='accent'>this week.</span>" lede={notes.intro}>
+    <LiveStatus />
+    <div class="btn-row">
+      <a class="btn btn--sm" href="/schedule.ics"><Icon name="calendar" />Add to my calendar</a>
+      {settings.signupUrl && <a class="btn btn--ghost btn--sm" href={settings.signupUrl} rel="noopener" target="_blank">{settings.signupLabel}</a>}
+    </div>
+  </PageHero>
+
+  <section class="section section--tight">
+    <div class="wrap">
+      {closures.length > 0 && (
+        <div class="closures" role="note">
+          <h2 class="h">Heads up</h2>
+          <ul>
+            {closures.map((c) => (
+              <li data-closure-end={c.endDate || c.date}>
+                <strong>{fmtDate(c.date!)}{c.endDate && c.endDate !== c.date && ` – ${fmtDate(c.endDate)}`}</strong>
+                <span>{c.note}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {programs.length > 1 && (
+        <div class="filters" data-filters hidden role="group" aria-label="Filter by program">
+          <button type="button" data-filter="all" aria-pressed="true">All classes</button>
+          {programs.map((p) => (
+            <button type="button" data-filter={p} data-program={p} aria-pressed="false"><span class="dot"></span>{PROGRAM_LABELS[p] ?? p}</button>
+          ))}
+        </div>
+      )}
+
+      <a class="jump btn btn--ghost btn--sm" data-jump-today hidden href="#">Jump to today</a>
+      <WeekGrid classes={classes} />
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">The classes</p>
+        <h2>What to expect.</h2>
+      </div>
+      <div class="classes">
+        {classes.map((c) => (
+          <article class="card cls" data-program={c.program}>
+            <span class="prog">{PROGRAM_LABELS[c.program] ?? c.program} · {LEVEL_LABELS[c.level] ?? c.level}</span>
+            <h3>{c.title}</h3>
+            <p class="when"><Icon name="clock" />{fmtDays(c.days)} · {fmtRange(c.start, c.end)}</p>
+            {c.description && <p class="muted">{c.description}</p>}
+            {c.instructor && <p class="who">Coach: {c.instructor}</p>}
+          </article>
+        ))}
+      </div>
+      <p class="first muted">
+        <strong>First class?</strong> Arrive 10 minutes early and wear athletic clothes with no zippers or pockets. Read the <a href="/handbook">student handbook</a> for gear and mat etiquette.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .closures { background: rgba(182,13,47,0.12); border: 1px solid rgba(182,13,47,0.5); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 24px; }
+  .closures .h { font-size: 0.8rem; letter-spacing: 0.16em; color: var(--red-text); margin-bottom: 8px; font-variation-settings: 'wdth' 112; }
+  .closures ul { list-style: none; padding: 0; display: grid; gap: 6px; }
+  .closures li { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .filters button {
+    display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: 999px;
+    background: transparent; border: 1px solid var(--line); font-weight: 600; font-size: 0.9rem; color: var(--muted);
+  }
+  .filters button:hover { color: var(--text); border-color: #444; }
+  .filters button[aria-pressed='true'] { background: #fff; border-color: #fff; color: var(--ink); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--prog); }
+  .jump { margin-bottom: 16px; }
+  @media (min-width: 640px) { .jump { display: none !important; } }
+  .classes { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+  .cls { display: grid; gap: 10px; align-content: start; border-top: 4px solid var(--prog); }
+  .prog { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--prog); }
+  .when { display: flex; align-items: center; gap: 8px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .when :global(svg) { width: 16px; height: 16px; color: var(--muted); }
+  .who { font-size: 0.9rem; color: var(--muted); }
+  .first { margin-top: 32px; max-width: 70ch; }
+  .first a { color: var(--red-text); }
+</style>

@@ -1,0 +1,118 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Photo from '../components/Photo.astro';
+import { getAbout, getInstructors, getSettings, renderMarkdoc } from '../lib/content';
+import { resolveImage } from '../lib/images';
+
+const [about, instructors, settings] = await Promise.all([getAbout(), getInstructors(), getSettings()]);
+const people = await Promise.all(
+  instructors.map(async (i) => ({ ...i.entry, slug: i.slug, html: renderMarkdoc((await i.entry.bio()).node), img: resolveImage(i.entry.photo) })),
+);
+const paragraphs = about.story.split(/\n\s*\n/).filter(Boolean);
+const schema = people.map((p) => ({
+  '@context': 'https://schema.org', '@type': 'Person', name: p.name, jobTitle: p.role,
+  worksFor: { '@id': 'https://atlas-jiujitsu.com/#gym' },
+}));
+---
+<Base
+  title="About Atlas Jiu-Jitsu | Meridian, Idaho Jiu-Jitsu Gym"
+  description="Atlas Jiu-Jitsu is a no-gi Brazilian Jiu-Jitsu academy in Meridian, Idaho, led by black belt Chase Riddick. No politics, no drama, no egos — just jiu-jitsu."
+  schema={schema}
+>
+  <PageHero kicker="About Atlas" title={about.storyTitle} image="/src/assets/images/photos/class-19-1.jpg" imageAlt="Atlas students seated on the mats during instruction" />
+
+  <section class="section">
+    <div class="wrap story">
+      <div class="prose story-text">{paragraphs.map((p) => <p>{p}</p>)}</div>
+      <div class="story-img" data-reveal><Photo src="/src/assets/images/photos/team-seminar.jpg" alt="The Atlas team after a seminar" sizes="(min-width: 1000px) 45vw, 100vw" /></div>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="wrap">
+      <div class="section-head section-head--split">
+        <div><p class="kicker">Our values</p><h2>How we train.</h2></div>
+        <p class="lede">{about.valuesIntro}</p>
+      </div>
+      <ol class="values">
+        {about.values.map((v, i) => (
+          <li class="card" data-reveal>
+            <span class="num">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{v.title}</h3>
+            <p class="muted">{v.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="instructors">
+    <div class="wrap">
+      <div class="section-head"><p class="kicker">Instructors</p><h2>Who you'll train with.</h2></div>
+      <div class="people">
+        {people.map((p) => (
+          <article class="person">
+            <div class="person-img">{p.img && <Image src={p.img} alt={`${p.name}, ${p.role}`} widths={[400, 700, 1000]} sizes="(min-width: 1000px) 35vw, 90vw" formats={['avif', 'webp']} />}</div>
+            <div class="person-body">
+              <h3 class="name">{p.name}</h3>
+              <p class="role">{[p.rank, p.role].filter(Boolean).join(' · ')}</p>
+              <div class="prose" set:html={p.html} />
+              {p.lineage && <p class="lineage"><strong>Lineage</strong> {p.lineage}</p>}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap gym">
+      <div>
+        <p class="kicker">Where we train</p>
+        <h2>{settings.hostGymName}.</h2>
+        <p class="lede">{about.gymIntro}</p>
+        <ul class="perks">{about.gymPerks.map((p) => <li><strong>{p.title}</strong><span>{p.body}</span></li>)}</ul>
+        {settings.hostGymUrl && <a class="link-arrow" href={settings.hostGymUrl} rel="noopener" target="_blank">Visit {settings.hostGymName}</a>}
+      </div>
+      <div class="gym-imgs">
+        <Photo src="/src/assets/images/gym/mecca-weights.jpg" alt={`Free weights at ${settings.hostGymName}`} sizes="(min-width: 1000px) 25vw, 50vw" widths={[480, 800, 1200]} />
+        <Photo src="/src/assets/images/gym/mecca-entrance.jpg" alt={`The ${settings.hostGymName} entrance`} sizes="(min-width: 1000px) 25vw, 50vw" widths={[480, 800, 1200]} />
+        <Photo src={about.gymPhoto} alt={`The training floor at ${settings.hostGymName}`} sizes="(min-width: 1000px) 50vw, 100vw" class="wide" />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .story { display: grid; gap: 48px; grid-template-columns: 1fr; align-items: center; }
+  @media (min-width: 1000px) { .story { grid-template-columns: 1fr 1fr; gap: 72px; } }
+  .story-text p:first-child { font-size: 1.35rem; color: #fff; font-weight: 500; }
+  .story-img { border-radius: var(--radius); overflow: hidden; }
+  .values { list-style: none; padding: 0; display: grid; gap: 14px; grid-template-columns: 1fr; }
+  @media (min-width: 800px) { .values { grid-template-columns: repeat(3, 1fr); } }
+  .values .card { display: grid; gap: 12px; align-content: start; }
+  .num { font-family: var(--font-display); font-variation-settings: 'wdth' 125; font-weight: 850; font-size: 2.6rem; line-height: 1; color: var(--red-text); }
+  .people { display: grid; gap: 64px; }
+  .person { display: grid; gap: 32px; grid-template-columns: 1fr; align-items: center; }
+  @media (min-width: 900px) { .person { grid-template-columns: 0.8fr 1.2fr; gap: 64px; } }
+  .person-img { background: radial-gradient(circle at 50% 60%, rgba(182,13,47,0.45), transparent 65%); border-radius: var(--radius); max-width: 480px; margin-inline: auto; width: 100%; }
+  .person-img :global(img) { width: 100%; -webkit-mask-image: linear-gradient(180deg, #000 78%, transparent); mask-image: linear-gradient(180deg, #000 78%, transparent); }
+  .name { font-size: clamp(2rem, 4vw, 3rem); text-transform: uppercase; font-variation-settings: 'wdth' 125; font-weight: 850; }
+  .role { color: var(--red-text); font-weight: 650; margin: 10px 0 20px; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem; }
+  .lineage { margin-top: 20px; padding: 14px 18px; border-left: 3px solid var(--red); background: var(--surface); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; color: var(--muted); }
+  .lineage strong { color: #fff; margin-right: 8px; }
+  .gym { display: grid; gap: 48px; grid-template-columns: 1fr; align-items: center; }
+  @media (min-width: 1000px) { .gym { grid-template-columns: 1fr 1fr; gap: 72px; } }
+  .gym > div:first-child { display: grid; gap: 22px; }
+  .perks { list-style: none; padding: 0; display: grid; gap: 1px; grid-template-columns: 1fr 1fr; background: #dcd8ce; border: 1px solid #dcd8ce; border-radius: var(--radius); overflow: hidden; }
+  .perks li { background: var(--paper); padding: 18px; display: grid; gap: 4px; }
+  .perks strong { font-family: var(--font-display); font-variation-settings: 'wdth' 110; font-weight: 750; }
+  .perks span { color: var(--ink-muted); font-size: 0.92rem; }
+  @media (max-width: 480px) { .perks { grid-template-columns: 1fr; } }
+  .gym-imgs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .gym-imgs :global(picture), .gym-imgs :global(img) { width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius); aspect-ratio: 1; }
+  .gym-imgs :global(.wide) { grid-column: 1 / -1; aspect-ratio: 16 / 9; }
+  .gym-imgs :global(picture:has(.wide)) { grid-column: 1 / -1; }
+</style>

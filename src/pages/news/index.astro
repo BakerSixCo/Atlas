@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPosts, getSettings } from '../../lib/content';
+
+const [posts, settings] = await Promise.all([getPosts(), getSettings()]);
+---
+<Base title="News & Events" description="Seminars, promotions, competition results and announcements from Atlas Jiu-Jitsu in Meridian, Idaho.">
+  <PageHero kicker="News & events" title="From the <span class='accent'>mats.</span>" lede="Seminars, promotions, competition results and announcements." />
+  <section class="section section--tight">
+    <div class="wrap">
+      {posts.length ? (
+        <div class="posts">{posts.map((p) => <PostCard post={p} />)}</div>
+      ) : (
+        <div class="card empty">
+          <p>Nothing posted yet — follow along on Instagram for day-to-day updates.</p>
+          {settings.instagram && <a class="btn btn--sm" href={settings.instagram} rel="noopener" target="_blank">Instagram</a>}
+        </div>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .posts { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+  .empty { display: grid; gap: 18px; justify-items: start; max-width: 640px; }
+</style>

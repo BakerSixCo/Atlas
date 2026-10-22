@@ -1,0 +1,83 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
+import { getSettings } from '../lib/content';
+import { getClasses, byDay, DAY_ORDER, DAY_NAMES, fmtRange } from '../lib/schedule';
+
+const [settings, classes] = await Promise.all([getSettings(), getClasses()]);
+const tel = settings.phone.replace(/[^\d+]/g, '');
+const week = byDay(classes);
+---
+<Base title="Contact & Directions" description={`Call, text or email Atlas Jiu-Jitsu. ${settings.locationNote}, ${settings.addressLine1}, ${settings.addressLine2}.`}>
+  <PageHero kicker="Contact" title="Come <span class='accent'>train.</span>" lede="Questions about classes, memberships, or your first visit? Reach out — a real person will get back to you." />
+
+  <section class="section section--tight">
+    <div class="wrap grid">
+      <div class="methods">
+        <a class="card method" href={`tel:${tel}`}>
+          <Icon name="phone" /><span><small>Call</small>{settings.phone}</span>
+        </a>
+        <a class="card method" href={`sms:${tel}`}>
+          <Icon name="message" /><span><small>Text</small>{settings.phone}</span>
+        </a>
+        <a class="card method" href={`mailto:${settings.email}`}>
+          <Icon name="mail" /><span><small>Email</small>{settings.email}</span>
+        </a>
+        {settings.instagram && (
+          <a class="card method" href={settings.instagram} rel="noopener" target="_blank">
+            <Icon name="instagram" /><span><small>Instagram</small>@{settings.instagram.replace(/\/$/, '').split('/').pop()}</span>
+          </a>
+        )}
+      </div>
+
+      <div class="card visit">
+        <div class="visit-img"><Photo src="/src/assets/images/gym/mecca-entrance.jpg" alt={`${settings.hostGymName} entrance`} sizes="(min-width: 1000px) 45vw, 100vw" widths={[480, 800, 1200]} /></div>
+        <div class="visit-body">
+          <h2 class="h3">Find us</h2>
+          <address>
+            {settings.locationNote && <strong>{settings.locationNote}</strong>}
+            <span>{settings.addressLine1}</span>
+            <span>{settings.addressLine2}</span>
+          </address>
+          {settings.mapsUrl && <a class="btn btn--sm" href={settings.mapsUrl} rel="noopener" target="_blank"><Icon name="pin" />Open in Maps</a>}
+          <h2 class="h3 hours-h">Class times</h2>
+          <dl class="hours">
+            {DAY_ORDER.filter((d) => week[d].length).map((d) => (
+              <div data-day={d}>
+                <dt>{DAY_NAMES[d]}</dt>
+                <dd>{week[d].map((s) => fmtRange(s.start, s.end)).join(', ')}</dd>
+              </div>
+            ))}
+          </dl>
+          <a class="link-arrow" href="/schedule">Full schedule</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .grid { display: grid; gap: 18px; grid-template-columns: 1fr; }
+  @media (min-width: 1000px) { .grid { grid-template-columns: 0.9fr 1.1fr; } }
+  .methods { display: grid; gap: 12px; align-content: start; }
+  .method { display: flex; gap: 16px; align-items: center; text-decoration: none; transition: border-color 0.2s, transform 0.2s var(--ease); }
+  .method:hover { border-color: var(--red); transform: translateY(-2px); }
+  .method :global(svg) { width: 26px; height: 26px; color: var(--red-text); flex: none; }
+  .method span { display: grid; font-weight: 650; font-size: 1.15rem; word-break: break-word; }
+  .method small { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); font-weight: 650; }
+  .visit { padding: 0; overflow: hidden; }
+  .visit-img { aspect-ratio: 16 / 9; overflow: hidden; }
+  .visit-img :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .visit-body { padding: clamp(22px, 3vw, 32px); display: grid; gap: 16px; justify-items: start; }
+  .h3 { font-family: var(--font-display); font-variation-settings: 'wdth' 118; font-weight: 800; text-transform: uppercase; font-size: 1.3rem; line-height: 1.1; }
+  .hours-h { margin-top: 12px; }
+  address { font-style: normal; display: grid; }
+  .hours { display: grid; gap: 0; width: 100%; }
+  .hours div { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .hours div.is-today dt { color: var(--red-text); }
+  .hours div.is-today dt::after { content: ' · Today'; font-size: 0.8rem; }
+  dt { font-weight: 650; }
+  dd { margin: 0; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+</style>

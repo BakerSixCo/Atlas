@@ -1,0 +1,54 @@
+items:
+  - question: Do I need any experience to start?
+    answer: >-
+      Absolutely not. Most of our students started with zero experience. Our
+      classes are beginner-friendly — you'll learn at your own pace with
+      instructors and training partners who support your growth.
+    onHome: true
+  - question: Do I need to be in shape first?
+    answer: >-
+      No. Training is how you get in shape. You just need the willingness to
+      learn — we'll help you build the rest.
+    onHome: true
+  - question: What should I wear to my first class?
+    answer: >-
+      For your first class, wear athletic clothes with no zippers, pockets, or
+      buttons, and bring water. Once you join, we train in rashguards and
+      grappling shorts (spats optional) — see the Student Handbook for the full
+      gear guide.
+    onHome: true
+  - question: Do you train in the gi?
+    answer: >-
+      No — Atlas is a no-gi academy. No-gi is fast, modern, and translates
+      directly to both competition and self-defense.
+    onHome: false
+  - question: How long are classes?
+    answer: >-
+      Classes are 60 minutes: warm-up, technique instruction, drilling, and
+      optional live sparring. Open Mat and Skill Labs are more flexible.
+    onHome: true
+  - question: Am I too old to start?
+    answer: Absolutely not. Jiu-jitsu is for all ages and fitness levels.
+    onHome: false
+  - question: Is gym access included in the membership?
+    answer: >-
+      Yes. Every Atlas membership includes 24/7 access to The Mecca Gym — weights,
+      conditioning, showers and sauna — so you can strength train and recover on
+      your own time.
+    onHome: true
+  - question: How clean is the gym?
+    answer: >-
+      We clean and sanitize the mats and training areas daily. Cleanliness is a
+      top priority — for safety, hygiene, and respect for your training space.
+    onHome: true
+  - question: Will I get hurt?
+    answer: >-
+      Safety comes first. We train with control, match intensity to our
+      partner's level, and tap early. Dangerous techniques like slams are not
+      allowed.
+    onHome: false
+  - question: Can I visit from another gym?
+    answer: >-
+      Yes — visitors are welcome. Reach out before you come so we know to
+      expect you, and follow our mat etiquette.
+    onHome: false

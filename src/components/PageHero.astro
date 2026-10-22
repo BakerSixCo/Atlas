@@ -1,0 +1,24 @@
+---
+import Photo from './Photo.astro';
+interface Props { kicker: string; title: string; lede?: string; image?: string | null; imageAlt?: string }
+const { kicker, title, lede, image, imageAlt = '' } = Astro.props;
+---
+<section class:list={['page-hero', { 'has-img': image }]}>
+  {image && <div class="bg"><Photo src={image} alt={imageAlt} eager sizes="100vw" /></div>}
+  <div class="wrap inner">
+    <p class="kicker">{kicker}</p>
+    <h1 set:html={title} />
+    {lede && <p class="lede">{lede}</p>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .page-hero { position: relative; isolation: isolate; padding-block: clamp(64px, 10vw, 128px) clamp(40px, 6vw, 72px); border-bottom: 1px solid var(--line); }
+  .page-hero.has-img { padding-block: clamp(96px, 14vw, 180px) clamp(48px, 7vw, 88px); }
+  .bg { position: absolute; inset: 0; z-index: -1; }
+  .bg :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10,10,10,0.95), rgba(10,10,10,0.6)), linear-gradient(0deg, var(--bg), transparent 50%); }
+  .inner { display: grid; gap: 20px; }
+  h1 { font-size: clamp(2.6rem, 7.5vw, 5.5rem); max-width: 16ch; }
+</style>

@@ -1,0 +1,124 @@
+---
+import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getSettings } from '../lib/content';
+import { getClasses, DAY_NAMES } from '../lib/schedule';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Absolute or root-relative path to a 1200×630 share image. */
+  image?: string;
+  /** Extra JSON-LD objects for this page. */
+  schema?: object[];
+}
+
+const { title, description, image = '/og-default.jpg', schema = [] } = Astro.props;
+const settings = await getSettings();
+const classes = await getClasses();
+const site = Astro.site!;
+const canonical = new URL(Astro.url.pathname, site).href;
+const ogImage = new URL(image, site).href;
+const fullTitle = title.includes('Atlas') ? title : `${title} | Atlas Jiu-Jitsu`;
+
+const tel = settings.phone.replace(/[^\d+]/g, '');
+const [locality, regionZip] = (settings.addressLine2 ?? '').split(',').map((s) => s.trim());
+const [region, postalCode] = (regionZip ?? '').split(/\s+/);
+
+const business = {
+  '@context': 'https://schema.org',
+  '@type': ['SportsActivityLocation', 'ExerciseGym'],
+  '@id': `${site.href}#gym`,
+  name: 'Atlas Jiu-Jitsu',
+  description: 'No-gi Brazilian Jiu-Jitsu academy in Meridian, Idaho. Beginner-friendly classes for all levels.',
+  url: site.href,
+  logo: new URL('/icon-512.png', site).href,
+  image: ogImage,
+  telephone: `+1${tel.replace(/^\+?1?/, '')}`,
+  email: settings.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: settings.addressLine1,
+    addressLocality: locality,
+    addressRegion: region,
+    postalCode,
+    addressCountry: 'US',
+  },
+  sameAs: [settings.instagram, settings.facebook, settings.youtube].filter(Boolean),
+  sport: 'Brazilian Jiu-Jitsu',
+  openingHoursSpecification: classes.flatMap((c) =>
+    c.days.map((d) => ({
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: `https://schema.org/${DAY_NAMES[d]}`,
+      opens: c.start,
+      closes: c.end,
+    })),
+  ),
+};
+
+// Escape "<" so content can never close the script element.
+const ld = (o: object) => JSON.stringify(o).replace(/</g, '\\u003c');
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Atlas Jiu-Jitsu News" href="/news/rss.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Atlas Jiu-Jitsu" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={ld(business)} />
+    {schema.map((s) => <script type="application/ld+json" set:html={ld(s)} />)}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    {settings.banner?.enabled && settings.banner.text && (
+      <div class="banner" role="status">
+        <div class="wrap">
+          {settings.banner.link
+            ? <a href={settings.banner.link}>{settings.banner.text} <span aria-hidden="true">→</span></a>
+            : <span>{settings.banner.text}</span>}
+        </div>
+      </div>
+    )}
+    <Header signupUrl={settings.signupUrl ?? undefined} signupLabel={settings.signupLabel} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer settings={settings} />
+    <script>
+      import '../scripts/site';
+    </script>
+  </body>
+</html>
+
+<style>
+  .banner {
+    background: var(--red); color: #fff; text-align: center;
+    font-weight: 600; font-size: 0.95rem; padding: 10px 0;
+  }
+  .banner a { color: inherit; text-decoration: none; }
+  .banner a:hover { text-decoration: underline; }
+</style>

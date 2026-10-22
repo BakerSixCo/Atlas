@@ -1,0 +1,62 @@
+heroKicker: Meridian, Idaho · No-Gi Brazilian Jiu-Jitsu
+heroTitle: No egos. Just jiu-jitsu.
+heroSubtitle: >-
+  Train hard, build confidence, and find a place where students of every level
+  can grow and belong.
+heroImage: /src/assets/images/photos/class-10.jpg
+heroImageAlt: Two Atlas students rolling during a no-gi class while teammates train behind them
+pillars:
+  - title: Black-belt instruction
+    body: >-
+      Every class is taught by a black belt from the Keith Owen / Pedro Sauer
+      lineage — structured, technical, and built to make you better.
+  - title: No politics. No drama.
+    body: >-
+      Respect over rank. We built a studio where people simply train hard, help
+      each other improve, and love the art.
+  - title: Open Mat & Skill Labs
+    body: >-
+      Extra mat time to drill, flow, or roll at your own pace — relaxed,
+      supportive, and focused on getting better.
+  - title: Full gym access, 24/7
+    body: >-
+      Your membership includes The Mecca Gym — a 24,000 sq ft performance
+      facility with weights, conditioning, showers and sauna.
+programs:
+  - title: No-Gi Jiu-Jitsu
+    body: >-
+      Fast, fluid and highly applicable to both sport and self-defense. Without
+      the gi, training emphasizes control, speed and technique — and minimizes
+      grip dependency, making it a dynamic choice for every athlete.
+    image: /src/assets/images/photos/class-13.jpg
+    imageAlt: Students drilling a no-gi position on the mats
+  - title: Adult All Levels
+    body: >-
+      Total beginners to advanced students, on the same mat. Every class combines
+      structured instruction, live drilling and controlled sparring. You don't
+      need to be in shape or "tough" to start — just willing to learn.
+    image: /src/assets/images/photos/class-07.jpg
+    imageAlt: Two training partners shake hands before a round
+  - title: Wrestling
+    body: >-
+      Tuesday nights are for takedowns. Build the standup, scrambles and top
+      pressure that make your jiu-jitsu dangerous from the very first grip.
+    image: /src/assets/images/photos/class-11.jpg
+    imageAlt: Two students hand-fighting for a takedown
+gallery:
+  - image: /src/assets/images/photos/class-20.jpg
+    alt: Head instructor Chase Riddick teaching the class seated on the mat
+  - image: /src/assets/images/photos/rolling-01.jpg
+    alt: Close-up of two grapplers in a scramble
+  - image: /src/assets/images/photos/team-seminar.jpg
+    alt: Atlas team photo after a seminar
+  - image: /src/assets/images/photos/class-05.jpg
+    alt: Students working a guard pass
+  - image: /src/assets/images/photos/rolling-02.jpg
+    alt: A student working for a submission from top position
+  - image: /src/assets/images/photos/team-lineup.jpg
+    alt: Atlas students lined up after training
+videoTitle: Your first class, explained.
+videoBody: >-
+  Never trained before? Chase walks you through what to expect, what to wear,
+  and why there's no reason to wait until you're "in shape."

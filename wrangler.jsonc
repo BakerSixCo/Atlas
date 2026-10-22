@@ -1,0 +1,9 @@
+// Cloudflare Workers config. The Astro adapter merges this with what it generates in dist/server.
+// "name" must match the Worker name in the Cloudflare dashboard.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "atlas-jiujitsu",
+  "compatibility_date": "2026-10-12",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true }
+}

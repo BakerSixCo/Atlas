@@ -1,0 +1,391 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import Icon from '../components/Icon.astro';
+import WeekGrid from '../components/WeekGrid.astro';
+import LiveStatus from '../components/LiveStatus.astro';
+import ScheduleData from '../components/ScheduleData.astro';
+import Faq from '../components/Faq.astro';
+import PostCard from '../components/PostCard.astro';
+import { getHome, getSettings, getFaq, getTestimonials, getInstructors, getPosts, getAbout, getScheduleNotes, renderMarkdoc } from '../lib/content';
+import { getClasses } from '../lib/schedule';
+import { resolveImage } from '../lib/images';
+import poster from '../assets/images/photos/meet-chase-poster.jpg';
+import figure from '../assets/images/brand/figure.png';
+import { getImage } from 'astro:assets';
+
+const [home, settings, faq, testimonials, instructors, posts, about, notes, classes] = await Promise.all([
+  getHome(), getSettings(), getFaq(), getTestimonials(), getInstructors(), getPosts(), getAbout(), getScheduleNotes(), getClasses(),
+]);
+const head = instructors[0];
+const headBio = head ? renderMarkdoc((await head.entry.bio()).node) : '';
+const headPhoto = resolveImage(head?.entry.photo);
+const posterImg = await getImage({ src: poster, width: 720, format: 'webp' });
+const tel = settings.phone.replace(/[^\d+]/g, '');
+const lineage = ['Pedro Sauer', 'Keith Owen', 'Josh Arentz & Todd Richards', head?.entry.name ?? 'Chase Riddick'];
+const homeFaq = faq.filter((f) => f.onHome).slice(0, 6);
+const [titleA, titleB] = (home.heroTitle || 'No egos. Just jiu-jitsu.').split(/(?<=\.)\s+/);
+// Keep hyphenated words ("jiu-jitsu") on one line.
+const noBreak = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/(\S+-\S+)/g, '<span class="nowrap">$1</span>');
+---
+<Base
+  title="Brazilian Jiu-Jitsu in Meridian, Idaho | Atlas Jiu-Jitsu"
+  description="No-gi Brazilian Jiu-Jitsu in Meridian, Idaho. Beginner-friendly classes for every level, black-belt instruction, and 24/7 access to The Mecca Gym."
+>
+  <ScheduleData classes={classes} closures={notes.closures} />
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="hero-media">
+      <Photo src={home.heroImage} alt={home.heroImageAlt} eager sizes="100vw" />
+    </div>
+    <div class="wrap hero-inner">
+      <p class="kicker">{home.heroKicker}</p>
+      <h1>
+        <span set:html={noBreak(titleA)} />
+        {titleB && <span class="accent" set:html={noBreak(titleB)} />}
+      </h1>
+      <p class="lede">{home.heroSubtitle}</p>
+      <div class="btn-row">
+        {settings.signupUrl && <a class="btn" href={settings.signupUrl} rel="noopener" target="_blank">{settings.signupLabel}<Icon name="arrow" /></a>}
+        <a class="btn btn--ghost" href="/schedule"><Icon name="calendar" />Class schedule</a>
+      </div>
+      <LiveStatus class="hero-live" />
+    </div>
+    <div class="hero-facts wrap">
+      <a href={settings.mapsUrl ?? '/contact'} rel="noopener" target="_blank"><Icon name="pin" /><span><small>{settings.locationNote}</small>{settings.addressLine1}, {settings.addressLine2}</span></a>
+      <a href={`tel:${tel}`}><Icon name="phone" /><span><small>Call or text</small>{settings.phone}</span></a>
+      <a href={`mailto:${settings.email}`}><Icon name="mail" /><span><small>Email</small>{settings.email}</span></a>
+    </div>
+  </section>
+
+  <!-- ── Pillars ── -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head section-head--split">
+        <div>
+          <p class="kicker">Why Atlas</p>
+          <h2>Real training.<br /><span class="accent">Real results.</span></h2>
+        </div>
+        <p class="lede">Programs that meet you where you are — whether it's your first day on the mat or you're getting ready for your next tournament.</p>
+      </div>
+      <ol class="pillars">
+        {home.pillars.map((p, i) => (
+          <li class="card" data-reveal>
+            <span class="num">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{p.title}</h3>
+            <p class="muted">{p.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ── Programs ── -->
+  <section class="section section--surface">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Programs</p>
+        <h2>Built for the mat.</h2>
+      </div>
+      <div class="programs">
+        {home.programs.map((p) => (
+          <article class="program" data-reveal>
+            <div class="program-img"><Photo src={p.image} alt={p.imageAlt} sizes="(min-width: 1000px) 33vw, (min-width: 640px) 50vw, 100vw" widths={[480, 800, 1200]} /></div>
+            <div class="program-body">
+              <h3>{p.title}</h3>
+              <p class="muted">{p.body}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Schedule preview ── -->
+  <section class="section" id="schedule">
+    <div class="wrap">
+      <div class="section-head section-head--split">
+        <div>
+          <p class="kicker">Class schedule</p>
+          <h2>This week<br />on the mats.</h2>
+        </div>
+        <div class="stack">
+          <p class="lede">{notes.intro}</p>
+          <div class="btn-row">
+            <a class="btn btn--ghost btn--sm" href="/schedule">Full schedule</a>
+            <a class="btn btn--ghost btn--sm" href="/schedule.ics"><Icon name="calendar" />Add to calendar</a>
+          </div>
+        </div>
+      </div>
+      <WeekGrid classes={classes} compact />
+    </div>
+  </section>
+
+  <!-- ── Instructor ── -->
+  {head && (
+    <section class="section instructor">
+      <div class="wrap instructor-grid">
+        <div class="instructor-photo" data-reveal>
+          <div class="glow" aria-hidden="true"></div>
+          {headPhoto && <Image src={headPhoto} alt={`${head.entry.name}, ${head.entry.role}`} widths={[400, 700, 1000]} sizes="(min-width: 1000px) 40vw, 90vw" formats={['avif', 'webp']} />}
+        </div>
+        <div>
+          <p class="kicker">Meet your instructor</p>
+          <h2>{head.entry.name}</h2>
+          <p class="role">{head.entry.rank} · {head.entry.role}</p>
+          <div class="prose bio" set:html={headBio} />
+          <ol class="lineage" aria-label="Lineage">
+            {lineage.map((n, i) => <li class:list={{ current: i === lineage.length - 1 }}>{n}</li>)}
+          </ol>
+          <a class="link-arrow" href="/about">More about Atlas</a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ── Video ── -->
+  <section class="section section--surface">
+    <div class="wrap video-grid">
+      <div class="video-copy">
+        <p class="kicker">New to jiu-jitsu?</p>
+        <h2>{home.videoTitle}</h2>
+        <p class="lede">{home.videoBody}</p>
+        <div class="btn-row">
+          <a class="btn" href="/handbook">Read the handbook</a>
+          <a class="btn btn--ghost" href="/faq">FAQ</a>
+        </div>
+      </div>
+      <div class="phone" data-reveal>
+        <video src="/video/meet-chase.mp4" poster={posterImg.src} preload="none" playsinline width="720" height="1280" aria-label="Video: Chase Riddick explains what to expect at your first class"></video>
+        <button class="play" type="button" data-video-play><Icon name="play" /><span class="sr-only">Play video</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Photo strip ── -->
+  {home.gallery.length > 0 && (
+    <section class="strip" aria-label="Photos from Atlas">
+      <ul>
+        {home.gallery.map((g) => (
+          <li><Photo src={g.image} alt={g.alt} sizes="(min-width: 1000px) 30vw, 80vw" widths={[480, 800, 1200]} /></li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <!-- ── Host gym ── -->
+  <section class="section section--paper">
+    <div class="wrap gym-grid">
+      <div>
+        <p class="kicker">Included with every membership</p>
+        <h2>24/7 access to {settings.hostGymName}.</h2>
+        <p class="lede">{about.gymIntro}</p>
+        <ul class="perks">
+          {about.gymPerks.map((p) => (
+            <li><strong>{p.title}</strong><span>{p.body}</span></li>
+          ))}
+        </ul>
+        {settings.hostGymUrl && <a class="link-arrow" href={settings.hostGymUrl} rel="noopener" target="_blank">Visit {settings.hostGymName}</a>}
+      </div>
+      <div class="gym-photo" data-reveal>
+        <Photo src={about.gymPhoto} alt={`Inside ${settings.hostGymName}`} sizes="(min-width: 1000px) 50vw, 100vw" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Testimonials ── -->
+  {testimonials.length > 0 && (
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">What our students say</p>
+          <h2>From the mats.</h2>
+        </div>
+        <div class="quotes">
+          {testimonials.map((t) => (
+            <figure class="card quote" data-reveal>
+              <blockquote><p>{t.quote}</p></blockquote>
+              <figcaption><strong>{t.name}</strong>{t.detail && <span>{t.detail}</span>}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ── News ── -->
+  {posts.length > 0 && (
+    <section class="section section--surface">
+      <div class="wrap">
+        <div class="section-head section-head--split">
+          <div><p class="kicker">News &amp; events</p><h2>Latest from Atlas.</h2></div>
+          <a class="link-arrow" href="/news">All news</a>
+        </div>
+        <div class="posts">{posts.slice(0, 3).map((p) => <PostCard post={p} />)}</div>
+      </div>
+    </section>
+  )}
+
+  <!-- ── FAQ ── -->
+  <section class="section">
+    <div class="wrap faq-grid">
+      <div>
+        <p class="kicker">FAQ</p>
+        <h2>Questions?<br />Answered.</h2>
+        <p class="lede">Still wondering about something? <a href={`tel:${tel}`}>Call or text</a> — we're happy to help.</p>
+        <a class="link-arrow" href="/faq">See all questions</a>
+      </div>
+      <Faq items={homeFaq} />
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="cta">
+    <div class="wrap cta-inner">
+      <Image src={figure} alt="" width={180} densities={[1, 2]} class="cta-figure" />
+      <div>
+        <h2>Your first class<br />is the hardest step.</h2>
+        <p>Show up. We'll take it from there.</p>
+      </div>
+      <div class="btn-row">
+        {settings.signupUrl && <a class="btn btn--light" href={settings.signupUrl} rel="noopener" target="_blank">{settings.signupLabel}</a>}
+        <a class="btn btn--ghost" href={`tel:${tel}`}><Icon name="phone" />{settings.phone}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Hero */
+  .hero { position: relative; min-height: min(92svh, 920px); display: grid; grid-template-rows: 1fr auto; isolation: isolate; margin-top: calc(var(--header-h) * -1); padding-top: var(--header-h); }
+  .hero-media { position: absolute; inset: 0; z-index: -1; }
+  .hero-media :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 60% 40%; }
+  .hero-media::after {
+    content: ''; position: absolute; inset: 0;
+    background:
+      linear-gradient(90deg, rgba(10,10,10,0.94) 0%, rgba(10,10,10,0.75) 45%, rgba(10,10,10,0.25) 100%),
+      linear-gradient(0deg, var(--bg) 0%, rgba(10,10,10,0) 40%);
+  }
+  .hero-inner { align-self: center; display: grid; gap: 24px; padding-block: 64px 40px; max-width: var(--maxw); }
+  .hero h1 { display: grid; max-width: 14ch; font-size: clamp(2.3rem, 8.5vw, 6.5rem); }
+  .hero .lede { color: #d4d4cf; max-width: 46ch; }
+  .hero-live { justify-self: start; margin-top: 8px; }
+  .hero-facts {
+    display: grid; gap: 1px; grid-template-columns: 1fr; padding-bottom: 32px;
+  }
+  @media (min-width: 900px) { .hero-facts { grid-template-columns: 1.4fr 1fr 1.2fr; } }
+  .hero-facts a {
+    display: flex; gap: 14px; align-items: center; padding: 16px 0; text-decoration: none;
+    border-top: 1px solid rgba(255,255,255,0.14);
+  }
+  .hero-facts a:hover span { color: var(--red-text); }
+  .hero-facts :global(svg) { width: 20px; height: 20px; color: var(--red-text); flex: none; }
+  .hero-facts span { display: grid; font-weight: 600; line-height: 1.35; word-break: break-word; }
+  .hero-facts small { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); font-weight: 600; }
+
+  /* Pillars */
+  .pillars { list-style: none; padding: 0; display: grid; gap: 14px; grid-template-columns: 1fr; }
+  @media (min-width: 640px) { .pillars { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .pillars { grid-template-columns: repeat(4, 1fr); } }
+  .pillars .card { display: grid; gap: 12px; align-content: start; transition: border-color 0.3s, transform 0.3s var(--ease); }
+  .pillars .card:hover { border-color: var(--red); transform: translateY(-3px); }
+  .num { font-family: var(--font-display); font-variation-settings: 'wdth' 125; font-weight: 850; font-size: 2.6rem; line-height: 1; color: var(--red-text); }
+
+  /* Programs */
+  .programs { display: grid; gap: 18px; grid-template-columns: 1fr; }
+  @media (min-width: 760px) { .programs { grid-template-columns: repeat(3, 1fr); } }
+  .program { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
+  .program-img { aspect-ratio: 4 / 3; overflow: hidden; }
+  .program-img :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease); }
+  .program:hover .program-img :global(img) { transform: scale(1.04); }
+  .program-body { padding: 24px; display: grid; gap: 10px; align-content: start; }
+
+  .stack { display: grid; gap: 18px; }
+
+  /* Instructor */
+  .instructor { overflow: hidden; }
+  .instructor-grid { display: grid; gap: 40px; align-items: center; grid-template-columns: 1fr; }
+  @media (min-width: 1000px) { .instructor-grid { grid-template-columns: 0.9fr 1.1fr; gap: 72px; } }
+  .instructor-photo { position: relative; max-width: 520px; margin-inline: auto; }
+  .instructor-photo :global(img) { position: relative; width: 100%; -webkit-mask-image: linear-gradient(180deg, #000 75%, transparent); mask-image: linear-gradient(180deg, #000 75%, transparent); }
+  .glow { position: absolute; inset: 15% 5% 10%; background: radial-gradient(circle, rgba(182,13,47,0.55), transparent 65%); filter: blur(30px); }
+  .role { color: var(--red-text); font-weight: 650; margin: 14px 0 22px; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem; }
+  .bio { color: #d4d4cf; }
+  .lineage { list-style: none; padding: 0; margin: 32px 0; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .lineage li { padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 0.85rem; font-weight: 600; color: var(--muted); }
+  .lineage li:not(:last-child)::after { content: '→'; margin-left: 12px; color: var(--red-text); }
+  .lineage li { display: inline-flex; align-items: center; }
+  .lineage li.current { background: var(--red); border-color: var(--red); color: #fff; }
+
+  /* Video */
+  .video-grid { display: grid; gap: 48px; align-items: center; grid-template-columns: 1fr; }
+  @media (min-width: 900px) { .video-grid { grid-template-columns: 1.2fr 0.8fr; gap: 80px; } }
+  .video-copy { display: grid; gap: 22px; }
+  .phone {
+    position: relative; width: min(100%, 360px); margin-inline: auto; aspect-ratio: 9 / 16;
+    border-radius: 36px; overflow: hidden; border: 8px solid #1f1f1f; background: #000;
+    box-shadow: 0 40px 80px -30px rgba(182, 13, 47, 0.5);
+  }
+  .phone video { width: 100%; height: 100%; object-fit: cover; }
+  .play {
+    position: absolute; inset: 0; margin: auto; width: 84px; height: 84px; border-radius: 50%;
+    background: var(--red); border: 0; color: #fff; display: grid; place-items: center;
+    box-shadow: 0 0 0 10px rgba(182, 13, 47, 0.25); transition: transform 0.2s var(--ease);
+  }
+  .play:hover { transform: scale(1.06); }
+  .play :global(svg) { width: 30px; height: 30px; margin-left: 4px; }
+
+  /* Strip */
+  .strip ul {
+    list-style: none; padding: 0 var(--gutter); display: grid; grid-auto-flow: column;
+    grid-auto-columns: min(80vw, 420px); gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
+    scrollbar-width: none; padding-block: 8px;
+  }
+  .strip ul::-webkit-scrollbar { display: none; }
+  .strip li { scroll-snap-align: center; aspect-ratio: 4 / 5; border-radius: var(--radius); overflow: hidden; }
+  .strip :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  @media (min-width: 1000px) { .strip ul { grid-auto-columns: calc((100% - 5 * 12px) / 4.5); } }
+
+  /* Gym */
+  .gym-grid { display: grid; gap: 48px; align-items: center; grid-template-columns: 1fr; }
+  @media (min-width: 1000px) { .gym-grid { grid-template-columns: 1fr 1fr; gap: 72px; } }
+  .gym-grid > div:first-child { display: grid; gap: 22px; }
+  .perks { list-style: none; padding: 0; display: grid; gap: 1px; grid-template-columns: 1fr 1fr; background: #dcd8ce; border: 1px solid #dcd8ce; border-radius: var(--radius); overflow: hidden; }
+  .perks li { background: var(--paper); padding: 18px; display: grid; gap: 4px; }
+  .perks strong { font-family: var(--font-display); font-variation-settings: 'wdth' 110; font-weight: 750; }
+  .perks span { color: var(--ink-muted); font-size: 0.92rem; }
+  @media (max-width: 480px) { .perks { grid-template-columns: 1fr; } }
+  .gym-photo { border-radius: var(--radius); overflow: hidden; aspect-ratio: 4 / 3; }
+  .gym-photo :global(img) { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Quotes */
+  .quotes { columns: 1; column-gap: 14px; }
+  @media (min-width: 720px) { .quotes { columns: 2; } }
+  .quote { break-inside: avoid; margin-bottom: 14px; display: grid; gap: 20px; }
+  .quote blockquote p { font-size: 1.12rem; line-height: 1.55; }
+  .quote blockquote p::before { content: '“'; display: block; font-family: var(--font-display); font-size: 4rem; line-height: 0.6; color: var(--red-text); margin-bottom: 12px; }
+  .quote figcaption { display: grid; }
+  .quote figcaption span { color: var(--muted); font-size: 0.9rem; }
+
+  .posts { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+  /* FAQ */
+  .faq-grid { display: grid; gap: 40px; grid-template-columns: 1fr; }
+  @media (min-width: 1000px) { .faq-grid { grid-template-columns: 0.8fr 1.2fr; gap: 72px; } .faq-grid > div:first-child { position: sticky; top: calc(var(--header-h) + 32px); align-self: start; } }
+  .faq-grid > div:first-child { display: grid; gap: 20px; align-content: start; }
+  .faq-grid .lede a { color: var(--red-text); }
+
+  /* CTA */
+  .cta { background: var(--red); position: relative; overflow: hidden; }
+  .cta-inner { display: grid; gap: 28px; align-items: center; padding-block: clamp(56px, 8vw, 96px); grid-template-columns: 1fr; }
+  @media (min-width: 1000px) { .cta-inner { grid-template-columns: auto 1fr auto; gap: 48px; } }
+  .cta h2 { font-size: clamp(2rem, 4.6vw, 3.4rem); }
+  .cta p { font-size: 1.15rem; margin-top: 10px; color: rgba(255,255,255,0.88); }
+  .cta-figure { width: 140px; filter: brightness(0) invert(1); opacity: 0.95; }
+  @media (max-width: 999px) { .cta-figure { display: none; } }
+  .btn--light { --btn-bg: #fff; --btn-fg: var(--ink); --btn-bd: #fff; }
+  .btn--light:hover { --btn-bg: var(--ink); --btn-fg: #fff; --btn-bd: var(--ink); }
+  .cta .btn--ghost { --btn-bd: rgba(255,255,255,0.5); }
+</style>

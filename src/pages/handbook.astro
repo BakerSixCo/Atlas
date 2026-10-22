@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { getHandbook, renderMarkdoc } from '../lib/content';
+import Markdoc from '@markdoc/markdoc';
+
+const handbook = await getHandbook();
+const { node } = await handbook.body();
+
+// Give each H2 a stable id so the table of contents can link to it.
+const slug = (s: string) => s.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const toc: { id: string; text: string }[] = [];
+const textOf = (n: import('@markdoc/markdoc').Node): string =>
+  n.type === 'text' ? String(n.attributes.content ?? '') : n.children.map(textOf).join('');
+for (const n of node.walk()) {
+  if (n.type === 'heading' && n.attributes.level === 2) {
+    const text = textOf(n);
+    n.attributes.id = slug(text);
+    toc.push({ id: n.attributes.id, text });
+  }
+}
+const html = renderMarkdoc(node, {
+  nodes: { heading: { ...Markdoc.nodes.heading, attributes: { ...Markdoc.nodes.heading.attributes, id: { type: String } } } },
+});
+---
+<Base title="Student Handbook" description="The Atlas Jiu-Jitsu student handbook: mat etiquette, no-gi gear requirements, hygiene, training guidelines, rank and promotion, and code of conduct.">
+  <PageHero kicker="Student handbook" title="Train the <span class='accent'>Atlas way.</span>" lede={handbook.intro}>
+    {handbook.pdf && <div class="btn-row"><a class="btn btn--ghost btn--sm" href={handbook.pdf} download><Icon name="download" />Download PDF</a></div>}
+  </PageHero>
+  <section class="section section--tight">
+    <div class="wrap layout">
+      <nav class="toc" aria-label="Handbook sections">
+        <p class="h">On this page</p>
+        <ol>{toc.map((t) => <li><a href={`#${t.id}`}>{t.text}</a></li>)}</ol>
+      </nav>
+      <article class="prose" set:html={html} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .layout { display: grid; gap: 40px; grid-template-columns: 1fr; }
+  @media (min-width: 1000px) { .layout { grid-template-columns: 240px 1fr; gap: 80px; } .toc { position: sticky; top: calc(var(--header-h) + 32px); align-self: start; } }
+  .toc { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
+  .toc .h { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--muted); font-weight: 700; margin-bottom: 10px; }
+  .toc ol { list-style: none; padding: 0; display: grid; gap: 2px; }
+  .toc a { display: block; padding: 6px 0; text-decoration: none; color: var(--muted); font-size: 0.93rem; font-weight: 550; }
+  .toc a:hover { color: var(--red-text); }
+  .prose :global(h2:first-child) { margin-top: 0; }
+</style>

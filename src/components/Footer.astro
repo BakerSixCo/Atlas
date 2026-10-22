@@ -1,0 +1,84 @@
+---
+import { Image } from 'astro:assets';
+import lockup from '../assets/images/brand/lockup.png';
+import Icon from './Icon.astro';
+
+interface Props { settings: Awaited<ReturnType<typeof import('../lib/content').getSettings>> }
+const { settings: s } = Astro.props;
+const tel = s.phone.replace(/[^\d+]/g, '');
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="wrap grid">
+    <div class="col brand-col">
+      <Image src={lockup} alt="Atlas Jiu-Jitsu" width={150} densities={[1, 2]} />
+      <p class="muted">No egos. Just jiu-jitsu.<br />No-gi Brazilian Jiu-Jitsu in Meridian, Idaho.</p>
+      <div class="social">
+        {s.instagram && <a href={s.instagram} rel="noopener" target="_blank"><Icon name="instagram" label="Instagram" /></a>}
+        {s.facebook && <a href={s.facebook} rel="noopener" target="_blank"><Icon name="facebook" label="Facebook" /></a>}
+        {s.youtube && <a href={s.youtube} rel="noopener" target="_blank"><Icon name="youtube" label="YouTube" /></a>}
+      </div>
+    </div>
+    <div class="col">
+      <h2 class="h">Visit</h2>
+      <address>
+        {s.locationNote && <span>{s.locationNote}</span>}
+        <span>{s.addressLine1}</span>
+        <span>{s.addressLine2}</span>
+      </address>
+      {s.mapsUrl && <a class="link-arrow" href={s.mapsUrl} rel="noopener" target="_blank">Get directions</a>}
+    </div>
+    <div class="col">
+      <h2 class="h">Contact</h2>
+      <ul>
+        <li><a href={`tel:${tel}`}><Icon name="phone" /> {s.phone}</a></li>
+        <li><a href={`mailto:${s.email}`}><Icon name="mail" /> {s.email}</a></li>
+      </ul>
+    </div>
+    <div class="col">
+      <h2 class="h">Explore</h2>
+      <ul>
+        <li><a href="/schedule">Class schedule</a></li>
+        <li><a href="/about">About &amp; instructors</a></li>
+        <li><a href="/handbook">Student handbook</a></li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/news">News &amp; events</a></li>
+        {s.hostGymUrl && <li><a href={s.hostGymUrl} rel="noopener" target="_blank">{s.hostGymName}</a></li>}
+      </ul>
+    </div>
+  </div>
+  <div class="wrap legal">
+    <span>© {year} Atlas Jiu-Jitsu. All rights reserved.</span>
+    <a href="/schedule.ics">Add schedule to your calendar</a>
+  </div>
+</footer>
+
+<style>
+  .site-footer { border-top: 1px solid var(--line); background: #050505; padding-top: clamp(56px, 8vw, 96px); }
+  .grid { display: grid; gap: 40px; grid-template-columns: 1fr; }
+  @media (min-width: 720px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1000px) { .grid { grid-template-columns: 1.5fr 1fr 1.2fr 1fr; } }
+  .brand-col img { width: 150px; margin-bottom: 18px; }
+  .h {
+    font-size: 0.8rem; letter-spacing: 0.18em; color: var(--muted);
+    font-variation-settings: 'wdth' 112; font-weight: 700; margin-bottom: 16px;
+  }
+  address { font-style: normal; display: grid; margin-bottom: 12px; }
+  ul { list-style: none; padding: 0; display: grid; gap: 10px; }
+  ul a { text-decoration: none; display: inline-flex; align-items: center; gap: 10px; color: var(--text); opacity: 0.85; word-break: break-word; }
+  ul a:hover { opacity: 1; color: var(--red-text); }
+  ul :global(svg) { width: 16px; height: 16px; flex: none; color: var(--red-text); }
+  .social { display: flex; gap: 10px; margin-top: 20px; }
+  .social a {
+    width: 44px; height: 44px; border-radius: 999px; border: 1px solid var(--line);
+    display: grid; place-items: center; transition: background 0.2s, border-color 0.2s;
+  }
+  .social a:hover { background: var(--red); border-color: var(--red); }
+  .social :global(svg) { width: 20px; height: 20px; }
+  .legal {
+    display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between;
+    margin-top: 56px; padding-block: 24px; border-top: 1px solid var(--line);
+    font-size: 0.85rem; color: var(--muted);
+  }
+  .legal a { color: var(--muted); }
+</style>

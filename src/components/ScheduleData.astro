@@ -1,0 +1,13 @@
+---
+// Machine-readable schedule for the live-status script. JSON data blocks are not executed, so CSP is unaffected.
+import { byDay, DAY_ORDER, type ClassItem } from '../lib/schedule';
+interface Props { classes: ClassItem[]; closures?: { date: string | null; endDate?: string | null; note: string }[] }
+const { classes, closures = [] } = Astro.props;
+const days = byDay(classes);
+const sessions = DAY_ORDER.flatMap((d) =>
+  days[d].map((s) => ({ day: d, start: s.start, end: s.end, title: s.title, program: s.program })),
+);
+const json = (o: unknown) => JSON.stringify(o).replace(/</g, '\\u003c');
+---
+<script type="application/json" id="schedule-data" set:html={json(sessions)} />
+<script type="application/json" id="closure-data" set:html={json(closures.filter((c) => c.date))} />
