@@ -1,23 +1,36 @@
 items:
-  - name: Levi Foster
-    detail: Member
-    quote: >-
-      Going to Atlas Jiu-Jitsu has upped my jiu-jitsu game entirely. I'm grateful
-      to train under Chase and make so many new friends! Great environment, great
-      people. 10/10.
-  - name: James Stanton
-    detail: Member
-    quote: >-
-      If you're looking for a gym that combines excellent no-gi instruction,
-      supports your individual path of development, and provides a fun and SAFE
-      training atmosphere, I can't recommend Atlas Jiu-Jitsu enough.
-  - name: Joshua Baker
-    detail: Student & parent
-    quote: >-
-      As both a student and a parent, I can't say enough good things about Atlas
-      Jiu-Jitsu. Led by Head Instructor Chase Riddick, Atlas delivers world-class
-      instruction in a welcoming, high-energy environment that's perfect for all
-      ages and experience levels.
-  - name: Alex Goodwin
-    detail: Member
-    quote: You'll never have as much fun and be as productive at the same time.
+  - name: ''
+    detail: ''
+    source: "Google review"
+    stars: 5
+    quote: "Atlas Jiu Jitsu is easily the best gym in the treasure valley. Great coaching, great structure, and positive vibes"
+  - name: ''
+    detail: ''
+    source: "Google review"
+    stars: 5
+    quote: "Hands down the best No-Gi JiuJitsu gym in the Gem State. Flexible schedules, encouraging coaches and a teaching style that helps anyone learn. The environment is super chill and friendly and the best part is that there is no Ego or Surprise fee’s. Overall amazing spot."
+  - name: ''
+    detail: ''
+    source: "Google review (excerpt)"
+    stars: 5
+    quote: "As a veteran who just started BJJ last week, I was looking for community, structure, and a strong workout. Atlas has all three. The coaches are professional, the environment is welcoming, and the people make it easy to keep showing up."
+  - name: ''
+    detail: ''
+    source: "Google review"
+    stars: 5
+    quote: "Great atmosphere and coaching; intense but also safe, no one cranks submissions. It’s all No-Gi, and Chase (the head coach) specializes in helping wrestlers cross over to submission grappling. So if you, like me, don’t have a wrestling background, It’s a great place to develop both wrestling and Jiu-Jitsu skills"
+  - name: ''
+    detail: ''
+    source: "Google review (excerpt)"
+    stars: 5
+    quote: "I’ve trained at a lot of gyms around the Treasure Valley, and Atlas Jiu-Jitsu is easily my favorite and now my home gym."
+  - name: ''
+    detail: ''
+    source: "Google review"
+    stars: 5
+    quote: "Safe training environment. High-level instruction. Great community."
+  - name: ''
+    detail: ''
+    source: "Google review"
+    stars: 5
+    quote: "Great gym that specializes in Nogi."
