@@ -74,7 +74,7 @@ const year = new Date().getFullYear();
   }
   address { font-style: normal; display: grid; margin-bottom: 12px; }
   ul { list-style: none; padding: 0; display: grid; gap: 10px; }
-  ul a { text-decoration: none; display: inline-flex; align-items: center; gap: 10px; color: var(--text); opacity: 0.85; word-break: break-word; }
+  ul a { text-decoration: none; display: inline-flex; align-items: center; gap: 10px; min-height: 36px; color: var(--text); opacity: 0.85; word-break: break-word; }
   ul a:hover { opacity: 1; color: var(--red-text); }
   ul :global(svg) { width: 16px; height: 16px; flex: none; color: var(--red-text); }
   .social { display: flex; gap: 10px; margin-top: 20px; }
@@ -89,5 +89,5 @@ const year = new Date().getFullYear();
     margin-top: 56px; padding-block: 24px; border-top: 1px solid var(--line);
     font-size: 0.85rem; color: var(--muted);
   }
-  .legal a { color: var(--muted); }
+  .legal a { color: var(--muted); display: inline-flex; align-items: center; min-height: 44px; }
 </style>

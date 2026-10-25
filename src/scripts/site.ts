@@ -80,6 +80,10 @@ function paintToday() {
 }
 
 /* ── "Live now / Up next" status ── */
+/** Class name on one line, time on the next. No separators, so nothing can wrap awkwardly. */
+const stack = (title: string, when: string) =>
+  `<strong class="live-title">${esc(title)}</strong><span class="live-when">${esc(when)}</span>`;
+
 function liveStatus(): { state: 'live' | 'next' | 'closed' | 'none'; html: string } {
   if (!sessions.length) return { state: 'none', html: '' };
   const now = gymNow();
@@ -89,7 +93,7 @@ function liveStatus(): { state: 'live' | 'next' | 'closed' | 'none'; html: strin
   if (!closedToday) {
     const live = sessions.find((s) => s.day === now.day && toMin(s.start) <= now.minutes && now.minutes < toMin(s.end));
     if (live) {
-      return { state: 'live', html: `<strong>${esc(live.title)}</strong> is on the mats now · until ${fmt(live.end)}` };
+      return { state: 'live', html: stack(live.title, `On the mats now, until ${fmt(live.end)}`) };
     }
   }
 
@@ -102,10 +106,10 @@ function liveStatus(): { state: 'live' | 'next' | 'closed' | 'none'; html: strin
       .sort((a, b) => a.start.localeCompare(b.start))[0];
     if (!upcoming) continue;
     const when = offset === 0
-      ? `Today ${fmt(upcoming.start)} · ${inWords(toMin(upcoming.start) - now.minutes)}`
+      ? `Today ${fmt(upcoming.start)}, ${inWords(toMin(upcoming.start) - now.minutes)}`
       : offset === 1 ? `Tomorrow ${fmt(upcoming.start)}` : `${DAY_LABEL[day]} ${fmt(upcoming.start)}`;
-    const prefix = closedToday && offset > 0 ? `${esc(closedToday.note || 'Closed today')}. ` : '';
-    return { state: closedToday ? 'closed' : 'next', html: `${prefix}Up next: <strong>${esc(upcoming.title)}</strong> · ${when}` };
+    const prefix = closedToday && offset > 0 ? `${closedToday.note || 'Closed today'}. Next: ` : '';
+    return { state: closedToday ? 'closed' : 'next', html: stack(upcoming.title, `${prefix}${when}`) };
   }
   return { state: 'none', html: '' };
 }

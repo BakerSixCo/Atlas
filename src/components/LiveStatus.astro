@@ -1,21 +1,24 @@
 ---
-// Filled in by src/scripts/site.ts; hidden until then so no-JS visitors never see an empty pill.
+// Filled in by src/scripts/site.ts; hidden until then so no-JS visitors never see an empty box.
 interface Props { class?: string }
 ---
 <p class:list={['live', Astro.props.class]} data-live-status hidden>
   <span class="chip chip--live" data-live-chip>Next</span>
-  <span data-live-text></span>
+  <span class="text" data-live-text></span>
 </p>
 
 <style>
   .live {
-    display: inline-flex; align-items: center; flex-wrap: wrap; gap: 12px;
-    padding: 10px 18px 10px 10px; border-radius: 999px;
+    display: inline-flex; align-items: flex-start; gap: 12px; max-width: 100%;
+    padding: 12px 18px 12px 12px; border-radius: 18px;
     background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    font-size: 0.95rem;
+    font-size: 0.95rem; line-height: 1.35;
   }
+  .live .chip { flex: none; min-width: 64px; justify-content: center; margin-top: 1px; }
+  .text { display: grid; gap: 2px; min-width: 0; }
   .live[data-state='next'] .chip--live, .live[data-state='closed'] .chip--live { background: rgba(255,255,255,0.14); }
   .live[data-state='next'] .chip--live::before, .live[data-state='closed'] .chip--live::before { animation: none; }
-  .live :global(strong) { font-weight: 700; }
+  .live :global(.live-title) { font-weight: 700; }
+  .live :global(.live-when) { color: #cfcfca; }
 </style>

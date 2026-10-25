@@ -10,7 +10,7 @@ const { plan, promise, signupUrl, signupLabel = 'Sign up now' } = Astro.props;
     {plan.subtitle && <p class="sub">{plan.subtitle}</p>}
   </header>
   <p class="price"><span class="amount">{plan.price}</span> <span class="per">{plan.period}</span></p>
-  {(plan.billing || promise) && <p class="fine">{[plan.billing, promise].filter(Boolean).join(' · ')}</p>}
+  {(plan.billing || promise) && <p class="fine">{plan.billing && <span>{plan.billing}</span>}{promise && <span>{promise}</span>}</p>}
   <ul>
     {plan.features.map((f) => <li><Icon name="check" />{f}</li>)}
   </ul>
@@ -27,7 +27,10 @@ const { plan, promise, signupUrl, signupLabel = 'Sign up now' } = Astro.props;
   .price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; }
   .amount { font-family: var(--font-display); font-variation-settings: 'wdth' 118; font-weight: 850; font-size: clamp(3rem, 8vw, 4.5rem); line-height: 1; letter-spacing: -0.02em; }
   .per { color: var(--muted); font-size: 1.1rem; }
-  .fine { color: var(--red-text); font-weight: 650; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  /* Each phrase stays whole; if they don't fit side by side the second simply drops to its own line. */
+  .fine { display: flex; flex-wrap: wrap; gap: 4px 18px; color: var(--red-text); font-weight: 650; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  .fine span { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .fine span::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
   ul { list-style: none; padding: 0; display: grid; gap: 12px; margin-block: 6px; }
   li { display: flex; gap: 12px; align-items: flex-start; font-weight: 550; }
   li :global(svg) { width: 20px; height: 20px; flex: none; margin-top: 3px; color: var(--red-text); stroke-width: 3; }

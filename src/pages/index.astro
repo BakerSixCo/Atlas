@@ -236,7 +236,7 @@ const noBreak = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').re
         </div>
         {(settings.googleBusinessUrl || settings.reviewUrl) && (
           <div class="btn-row review-links">
-            {settings.googleBusinessUrl && <a class="btn btn--ghost btn--sm" href={settings.googleBusinessUrl} rel="noopener" target="_blank">Read our reviews on Google</a>}
+            {settings.googleBusinessUrl && <a class="btn btn--ghost btn--sm" href={settings.googleBusinessUrl} rel="noopener" target="_blank">Read reviews on Google</a>}
             {settings.reviewUrl && <a class="btn btn--ghost btn--sm" href={settings.reviewUrl} rel="noopener" target="_blank">Leave a review</a>}
           </div>
         )}
