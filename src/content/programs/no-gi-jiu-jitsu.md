@@ -13,8 +13,8 @@ intro: >-
   rashguard and shorts — the style used in modern competition and the most
   direct path to practical self-defense.
 cardText: >-
-  Our core program. Fast, technical grappling in a rashguard and shorts, taught
-  by a black belt — beginners and veterans on the same mat.
+  Our core program. Fast, technical grappling in a rashguard and shorts, led by
+  a black belt — beginners and veterans on the same mat.
 heroImage: /src/assets/images/photos/class-13.jpg
 heroImageAlt: Two Atlas students drilling a no-gi guard position
 highlights:
@@ -28,8 +28,8 @@ highlights:
       pressure, and timing — skills that transfer to any situation.
   - title: Black-belt instruction
     body: >-
-      Taught by head instructor Chase Riddick, a black belt from the Keith Owen
-      / Pedro Sauer lineage.
+      Led by head instructor Chase Riddick, a black belt in the Keith Owen /
+      Pedro Sauer lineage.
 faq:
   - question: What is no-gi jiu-jitsu?
     answer: >-

@@ -1,8 +1,9 @@
 ---
 import { byDay, DAY_ORDER, DAY_NAMES, fmtRange, LEVEL_LABELS, PROGRAM_LABELS, type ClassItem, type Day } from '../lib/schedule';
 
-interface Props { classes: ClassItem[]; compact?: boolean }
-const { classes, compact = false } = Astro.props;
+interface Props { classes: ClassItem[]; compact?: boolean; headingLevel?: 2 | 3 }
+const { classes, compact = false, headingLevel = 3 } = Astro.props;
+const Heading = `h${headingLevel}` as 'h2' | 'h3';
 const days = byDay(classes);
 // Always show Mon–Sat so the week reads naturally; show Sunday only if something is on it.
 const shown: Day[] = DAY_ORDER.filter((d) => d !== 'sun' || days.sun.length);
@@ -11,9 +12,9 @@ const shown: Day[] = DAY_ORDER.filter((d) => d !== 'sun' || days.sun.length);
   {shown.map((d) => (
     <section class="day" data-day={d} data-day-group id={compact ? undefined : `day-${d}`} aria-labelledby={`h-${d}${compact ? '-c' : ''}`}>
       <header>
-        <h3 id={`h-${d}${compact ? '-c' : ''}`}>
+        <Heading class="day-title" id={`h-${d}${compact ? '-c' : ''}`}>
           <span class="long">{DAY_NAMES[d]}</span><span class="short" aria-hidden="true">{DAY_NAMES[d].slice(0, 3)}</span>
-        </h3>
+        </Heading>
         <span class="today-tag">Today</span>
       </header>
       {days[d].length ? (
@@ -54,9 +55,13 @@ const shown: Day[] = DAY_ORDER.filter((d) => d !== 'sun' || days.sun.length);
   }
   .day.is-today { border-color: var(--red); box-shadow: 0 0 0 1px var(--red) inset; }
   .day header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding-inline: 4px; }
-  .day h3 { font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; font-variation-settings: 'wdth' 118; }
+  .day-title { font-family: var(--font-display); font-weight: 750; line-height: 1.15; font-size: 1rem; letter-spacing: 0.12em; text-transform: uppercase; font-variation-settings: 'wdth' 118; }
   .short { display: none; }
-  @media (min-width: 1000px) { .long { display: none; } .short { display: inline; } }
+  /* Keep the full day name for screen readers when the short label is shown. */
+  @media (min-width: 1000px) {
+    .long { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .short { display: inline; }
+  }
   .today-tag { display: none; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; background: var(--red); padding: 3px 8px; border-radius: 999px; }
   .day.is-today .today-tag { display: inline-block; }
 
@@ -67,7 +72,7 @@ const shown: Day[] = DAY_ORDER.filter((d) => d !== 'sun' || days.sun.length);
     background: var(--surface-2); overflow: hidden;
   }
   .session::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--prog, var(--red)); }
-  .session time { font-variant-numeric: tabular-nums; font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+  .session time { white-space: nowrap; font-variant-numeric: tabular-nums; font-size: 0.85rem; color: var(--muted); font-weight: 600; }
   .session strong { font-size: 0.98rem; line-height: 1.3; font-weight: 650; }
   .meta { display: flex; flex-wrap: wrap; gap: 6px 10px; font-size: 0.76rem; color: var(--muted); }
   .meta .prog { color: var(--prog); font-weight: 650; }

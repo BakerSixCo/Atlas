@@ -6,6 +6,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getSettings, getInstructors } from '../lib/content';
 import { getClasses, DAY_NAMES } from '../lib/schedule';
+import { publicPath } from '../lib/url';
 
 interface Props {
   title: string;
@@ -14,16 +15,19 @@ interface Props {
   image?: string;
   /** Extra JSON-LD objects for this page. */
   schema?: object[];
+  /** Keep this page out of search results (e.g. the 404 page). */
+  noindex?: boolean;
   /** Trail for Google's breadcrumb display, e.g. [{ name: 'Programs', path: '/programs' }]. Home is added automatically. */
   breadcrumbs?: { name: string; path: string }[];
 }
 
-const { title, description, image = '/og-default.jpg', schema = [], breadcrumbs = [] } = Astro.props;
+const { title, description, image = '/og-default.jpg', schema = [], breadcrumbs = [], noindex = false } = Astro.props;
 const settings = await getSettings();
 const classes = await getClasses();
 const [head] = await getInstructors();
 const site = Astro.site!;
-const canonical = new URL(Astro.url.pathname, site).href;
+const path = publicPath(Astro.url.pathname);
+const canonical = new URL(path, site).href;
 const ogImage = new URL(image, site).href;
 // Append the brand unless it's already there or would push the title past ~65 chars (Google truncates).
 const fullTitle = title.includes('Atlas') || title.length > 47 ? title : `${title} | Atlas Jiu-Jitsu`;
@@ -80,7 +84,7 @@ const breadcrumbLd = breadcrumbs.length
       })),
     }
   : null;
-const isHome = Astro.url.pathname === '/';
+const isHome = path === '/';
 
 // Escape "<" so content can never close the script element.
 const ld = (o: object) => JSON.stringify(o).replace(/</g, '\\u003c');
@@ -92,7 +96,7 @@ const ld = (o: object) => JSON.stringify(o).replace(/</g, '\\u003c');
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
     <meta name="theme-color" content="#0a0a0a" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
 

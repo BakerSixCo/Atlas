@@ -170,7 +170,7 @@ const noBreak = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').re
   <!-- ── Photo strip ── -->
   {home.gallery.length > 0 && (
     <section class="strip" aria-label="Photos from Atlas">
-      <ul>
+      <ul tabindex="0" aria-label="Photo gallery, scroll sideways">
         {home.gallery.map((g) => (
           <li><Photo src={g.image} alt={g.alt} sizes="(min-width: 1000px) 30vw, 80vw" widths={[480, 800, 1200]} /></li>
         ))}

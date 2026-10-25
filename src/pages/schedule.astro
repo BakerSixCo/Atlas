@@ -11,6 +11,9 @@ import { getClasses, fmtRange, fmtDays, PROGRAM_LABELS, LEVEL_LABELS, todayISO }
 const [classes, notes, settings, programPages] = await Promise.all([getClasses(), getScheduleNotes(), getSettings(), getPrograms()]);
 const pageFor = (program: string) => programPages.find((p) => p.entry.program === program);
 const programs = [...new Set(classes.map((c) => c.program))];
+const PROGRAM_ORDER = ['nogi', 'fundamentals', 'competition', 'wrestling', 'kids', 'openmat'];
+const rank = (p: string) => (PROGRAM_ORDER.includes(p) ? PROGRAM_ORDER.indexOf(p) : PROGRAM_ORDER.length);
+const cardClasses = [...classes].sort((a, b) => rank(a.program) - rank(b.program));
 const today = todayISO();
 const closures = notes.closures
   .filter((c) => c.date && (c.endDate || c.date)! >= today)
@@ -25,7 +28,7 @@ const fmtDate = (iso: string) =>
   description={`Weekly no-gi jiu-jitsu and wrestling class schedule at Atlas Jiu-Jitsu in Meridian, Idaho. ${classes.length} weekly classes, all levels welcome.`}
 >
   <ScheduleData classes={classes} closures={notes.closures} />
-  <PageHero kicker="Class schedule" title="Train <span class='accent'>this week.</span>" lede={notes.intro}>
+  <PageHero kicker="Class schedule" title="Train" accent="this week." lede={notes.intro}>
     <LiveStatus />
     <div class="btn-row">
       <a class="btn btn--sm" href="/schedule.ics"><Icon name="calendar" />Add to my calendar</a>
@@ -59,7 +62,7 @@ const fmtDate = (iso: string) =>
       )}
 
       <a class="jump btn btn--ghost btn--sm" data-jump-today hidden href="#">Jump to today</a>
-      <WeekGrid classes={classes} />
+      <WeekGrid classes={classes} headingLevel={2} />
     </div>
   </section>
 
@@ -70,7 +73,7 @@ const fmtDate = (iso: string) =>
         <h2>What to expect.</h2>
       </div>
       <div class="classes">
-        {classes.map((c) => (
+        {cardClasses.map((c) => (
           <article class="card cls" data-program={c.program}>
             <span class="prog">{PROGRAM_LABELS[c.program] ?? c.program} · {LEVEL_LABELS[c.level] ?? c.level}</span>
             <h3>{c.title}</h3>

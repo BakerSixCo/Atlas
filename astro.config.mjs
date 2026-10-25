@@ -7,7 +7,9 @@ import keystatic from '@keystatic/astro';
 
 export default defineConfig({
   site: 'https://atlas-jiujitsu.com',
-  trailingSlash: 'ignore',
+  // Pages are built as about.html and served at /about. Canonical URLs, the sitemap and
+  // internal links all use this form, so there are no redirect hops.
+  trailingSlash: 'never',
   adapter: cloudflare({
     // Optimize every image at build time; nothing is resized at request time.
     imageService: 'compile',
@@ -20,6 +22,7 @@ export default defineConfig({
     sitemap({ filter: (page) => !page.includes('/keystatic') }),
   ],
   build: {
+    format: 'file',
     // Keep every script and stylesheet in external files so the
     // Content-Security-Policy in public/_headers never needs 'unsafe-inline' for scripts.
     inlineStylesheets: 'never',

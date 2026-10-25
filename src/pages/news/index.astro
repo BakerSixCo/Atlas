@@ -7,7 +7,7 @@ import { getPosts, getSettings } from '../../lib/content';
 const [posts, settings] = await Promise.all([getPosts(), getSettings()]);
 ---
 <Base title="News & Events" breadcrumbs={[{ name: 'News', path: '/news' }]} description="Seminars, belt promotions, competition results and announcements from Atlas Jiu-Jitsu, a no-gi Brazilian Jiu-Jitsu academy in Meridian, Idaho.">
-  <PageHero kicker="News & events" title="From the <span class='accent'>mats.</span>" lede="Seminars, promotions, competition results and announcements." />
+  <PageHero kicker="News & events" title="From the" accent="mats." lede="Seminars, promotions, competition results and announcements." />
   <section class="section section--tight">
     <div class="wrap">
       {posts.length ? (

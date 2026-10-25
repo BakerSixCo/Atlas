@@ -17,6 +17,8 @@ Go to **atlas-jiujitsu.com/keystatic**, log in, edit something and hit **Save**.
 | Change the phone number, email or sign-up link | **Site settings** |
 | Edit the homepage, About page or handbook | **Pages** |
 
+Until a login method is configured (below), `/keystatic` deliberately shows "The site editor is not set up yet" instead of a broken admin page.
+
 ### One-time CMS login setup
 
 Choose one of these options.
@@ -61,7 +63,7 @@ npm run preview  # run the build in the real Cloudflare runtime
 
 ### SEO
 
-- **Program pages** (`/programs/*`) target the searches people actually make ("no-gi jiu-jitsu Meridian", "adult wrestling Meridian", "jiu-jitsu for beginners"). Each one has its own Google title and description fields in the admin, so keep the main phrase first.
+- **Program pages** (`/programs/*`) target the searches people actually make ("no-gi jiu-jitsu Meridian", "wrestling classes Meridian", "jiu-jitsu for beginners"). Each one has its own Google title and description fields in the admin, so keep the main phrase first.
 - **Structured data:** every page tells Google the gym's name, address, phone, class hours, service area and founder. Program pages add Service + FAQ markup. News posts marked as events produce Event listings.
 - **Fill in once** under **Site settings**: the Google Business Profile link, the review link, and latitude/longitude.
 - Old WordPress URLs 301-redirect to the new pages; `sitemap-index.xml` is generated on every build.

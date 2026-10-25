@@ -65,10 +65,15 @@ export function fmtTime(t: string): string {
   return `${h12}:${String(m).padStart(2, '0')} ${suffix}`;
 }
 
-/** "18:30","19:30" → "6:30–7:30 PM"; spans noon → "11:00 AM–12:00 PM" */
+/** "18:30","19:30" → "6:30–7:30 PM"; "11:00","12:00" → "11 AM–12 PM"; "06:00","07:00" → "6–7 AM" */
 export function fmtRange(start: string, end: string): string {
-  const s = fmtTime(start), e = fmtTime(end);
-  return s.slice(-2) === e.slice(-2) ? `${s.slice(0, -3)}–${e}` : `${s}–${e}`;
+  const part = (t: string, suffix: boolean) => {
+    const [h, m] = t.split(':').map(Number);
+    const clock = m ? `${h % 12 || 12}:${String(m).padStart(2, '0')}` : `${h % 12 || 12}`;
+    return suffix ? `${clock} ${h >= 12 ? 'PM' : 'AM'}` : clock;
+  };
+  const sameHalf = Number(start.slice(0, 2)) >= 12 === Number(end.slice(0, 2)) >= 12;
+  return `${part(start, !sameHalf)}–${part(end, true)}`;
 }
 
 export function fmtDays(days: Day[]): string {

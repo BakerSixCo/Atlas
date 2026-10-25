@@ -1,9 +1,12 @@
 ---
 import Photo from './Photo.astro';
-interface Props { kicker: string; title: string; lede?: string; image?: string | null; imageAlt?: string }
-const { kicker, title, lede, image, imageAlt = '' } = Astro.props;
-// Keep hyphenated words ("jiu-jitsu", "no-gi") from splitting across lines. Skips text inside tags.
-const heading = title.replace(/(^|>)([^<]*)/g, (_, a: string, text: string) => a + text.replace(/(\S+-\S+)/g, '<span class="nowrap">$1</span>'));
+interface Props { kicker: string; title: string; accent?: string; lede?: string; image?: string | null; imageAlt?: string }
+const { kicker, title, accent, lede, image, imageAlt = '' } = Astro.props;
+// Titles can come from the CMS, so treat them as plain text: escape everything, then keep
+// hyphenated words ("jiu-jitsu", "no-gi") from splitting across lines.
+const esc = (v: string) => v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const nb = (v: string) => esc(v).replace(/(\S+-\S+)/g, '<span class="nowrap">$1</span>');
+const heading = nb(title) + (accent ? ` <span class="accent">${nb(accent)}</span>` : '');
 ---
 <section class:list={['page-hero', { 'has-img': image }]}>
   {image && <div class="bg"><Photo src={image} alt={imageAlt} eager sizes="100vw" /></div>}

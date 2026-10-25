@@ -15,16 +15,11 @@ const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 
 onScroll();
 window.addEventListener('scroll', onScroll, { passive: true });
 
-const menuBtn = document.querySelector<HTMLButtonElement>('[data-menu-btn]');
-const mobileNav = document.querySelector<HTMLElement>('[data-mobile-nav]');
-menuBtn?.addEventListener('click', () => {
-  const open = menuBtn.getAttribute('aria-expanded') !== 'true';
-  menuBtn.setAttribute('aria-expanded', String(open));
-  if (mobileNav) mobileNav.hidden = !open;
-  document.body.style.overflow = open ? 'hidden' : '';
-});
+const menu = document.querySelector<HTMLDetailsElement>('[data-menu]');
+menu?.addEventListener('toggle', () => { document.body.style.overflow = menu.open ? 'hidden' : ''; });
+menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => { menu.open = false; }));
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && menuBtn?.getAttribute('aria-expanded') === 'true') menuBtn.click();
+  if (e.key === 'Escape' && menu?.open) { menu.open = false; menu.querySelector('summary')?.focus(); }
 });
 
 /* ── Time helpers (always in the gym's timezone, wherever the visitor is) ── */
@@ -124,7 +119,7 @@ function paintStatus() {
     el.hidden = false;
     el.dataset.state = state;
     const text = el.querySelector<HTMLElement>('[data-live-text]');
-    if (text) text.innerHTML = html;
+    if (text && text.innerHTML !== html) text.innerHTML = html;
     const chip = el.querySelector<HTMLElement>('[data-live-chip]');
     if (chip) chip.textContent = state === 'live' ? 'Live' : state === 'closed' ? 'Closed' : 'Next';
   });

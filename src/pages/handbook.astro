@@ -25,7 +25,7 @@ const html = renderMarkdoc(node, {
 });
 ---
 <Base title="Student Handbook: Gear, Etiquette & Rules | Atlas Jiu-Jitsu" breadcrumbs={[{ name: 'Handbook', path: '/handbook' }]} description="The Atlas Jiu-Jitsu student handbook: mat etiquette, no-gi gear requirements, hygiene, training guidelines, rank and promotion, and code of conduct.">
-  <PageHero kicker="Student handbook" title="Train the <span class='accent'>Atlas way.</span>" lede={handbook.intro}>
+  <PageHero kicker="Student handbook" title="Train the" accent="Atlas way." lede={handbook.intro}>
     {handbook.pdf && <div class="btn-row"><a class="btn btn--ghost btn--sm" href={handbook.pdf} download><Icon name="download" />Download PDF</a></div>}
   </PageHero>
   <section class="section section--tight">
