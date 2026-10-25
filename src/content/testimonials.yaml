@@ -8,11 +8,15 @@ items:
     detail: ''
     source: "Google review"
     stars: 5
+    showOn:
+      - membership
     quote: "Hands down the best No-Gi JiuJitsu gym in the Gem State. Flexible schedules, encouraging coaches and a teaching style that helps anyone learn. The environment is super chill and friendly and the best part is that there is no Ego or Surprise fee’s. Overall amazing spot."
   - name: ''
     detail: ''
     source: "Google review (excerpt)"
     stars: 5
+    showOn:
+      - trial
     quote: "As a veteran who just started BJJ last week, I was looking for community, structure, and a strong workout. Atlas has all three. The coaches are professional, the environment is welcoming, and the people make it easy to keep showing up."
   - name: ''
     detail: ''

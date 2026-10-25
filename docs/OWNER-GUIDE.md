@@ -33,6 +33,7 @@ The admin menu has four groups: Schedule, News & Alerts, Pages and People.
 | Change the membership price or what's included | Pages → Membership & pricing | Update the price here only: the home page, membership page and Google data all read from it. Then check the sign-up page in GymMaster shows the same price. |
 | Edit the home page, About page or handbook | Pages → Home page, About page or Student handbook | |
 | Edit a program page (no-gi, wrestling, beginners, open mat) | Pages → Program pages | Don't change a page's web address: old links break. The Google title and description control how it looks in search. |
+| Choose which review shows next to the price or the free trial form | People → Testimonials → open a review → "Also show next to…" | Pick one review for each spot. Reviews with stars and "Google review" need no name. |
 | Edit the FAQ, testimonials or instructors | People → FAQ, Testimonials or Instructors | |
 | Swap a photo | Open any photo field and choose a new image | Large landscape photos (about 2000 px wide) work best. Add a short description of each photo. |
 

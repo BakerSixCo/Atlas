@@ -3,9 +3,10 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import PlanCard from '../components/PlanCard.astro';
 import Faq from '../components/Faq.astro';
-import { getMembership, getSettings } from '../lib/content';
+import ReviewQuote from '../components/ReviewQuote.astro';
+import { getMembership, getSettings, getFeaturedReview } from '../lib/content';
 
-const [m, settings] = await Promise.all([getMembership(), getSettings()]);
+const [m, settings, review] = await Promise.all([getMembership(), getSettings(), getFeaturedReview('membership')]);
 const first = m.plans[0];
 const priceText = first ? `${first.price} ${first.period}` : '';
 const description = first
@@ -48,8 +49,11 @@ if (m.faq.length) {
 
   <section class="section section--tight">
     <div class="wrap layout">
-      <div class="plans">
-        {m.plans.map((p) => <PlanCard plan={p} promise={m.promise} signupUrl={settings.signupUrl} signupLabel={settings.signupLabel === 'Sign up' ? 'Sign up now' : settings.signupLabel} />)}
+      <div class="main">
+        <div class="plans">
+          {m.plans.map((p) => <PlanCard plan={p} promise={m.promise} signupUrl={settings.signupUrl} signupLabel={settings.signupLabel === 'Sign up' ? 'Sign up now' : settings.signupLabel} />)}
+        </div>
+        {review && <ReviewQuote review={review} />}
       </div>
       <aside class="card how">
         <h2 class="h3">{m.howTitle}</h2>
@@ -73,6 +77,7 @@ if (m.faq.length) {
 <style>
   .layout { display: grid; gap: 18px; grid-template-columns: 1fr; align-items: start; }
   @media (min-width: 1000px) { .layout { grid-template-columns: 1.1fr 0.9fr; gap: 28px; } }
+  .main { display: grid; gap: 18px; }
   .plans { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
   .h3 { font-family: var(--font-display); font-variation-settings: 'wdth' 115; font-weight: 800; font-size: 1.35rem; line-height: 1.15; }
   .how ol { list-style: none; padding: 0; display: grid; gap: 18px; margin-top: 18px; }

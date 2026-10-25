@@ -15,6 +15,11 @@ export const getHome = () => required(reader.singletons.home.read(), 'Home page'
 export const getAbout = () => required(reader.singletons.about.read(), 'About page');
 export const getFaq = async () => (await reader.singletons.faq.read())?.items ?? [];
 export const getTestimonials = async () => (await reader.singletons.testimonials.read())?.items ?? [];
+/** The testimonial chosen for a spot (e.g. next to the price). Falls back to nothing, never a random one. */
+export async function getFeaturedReview(spot: 'membership' | 'trial') {
+  const all = await getTestimonials();
+  return all.find((t) => t.showOn.includes(spot)) ?? null;
+}
 export const getScheduleNotes = async () =>
   (await reader.singletons.schedule.read()) ?? { intro: '', closures: [] };
 export const getMembership = () => required(reader.singletons.membership.read(), 'Membership');

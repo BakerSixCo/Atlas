@@ -427,6 +427,12 @@ export default config({
             name: fields.text({ label: 'Name (optional)', description: 'Leave blank to show the quote without a name.' }),
             detail: fields.text({ label: 'Detail (optional)', description: 'e.g. "Member since 2024" or "Parent & student"' }),
             source: fields.text({ label: 'Source (optional)', description: 'e.g. "Google review". Shown under the quote.' }),
+            showOn: fields.multiselect({
+              label: 'Also show next to…',
+              description: 'Shows this quote beside the price and/or the free trial form. Pick one quote for each.',
+              options: [{ label: 'Membership price', value: 'membership' }, { label: 'Free trial form', value: 'trial' }],
+              defaultValue: [],
+            }),
             stars: fields.integer({ label: 'Stars (optional)', description: 'Only for real star ratings, 1 to 5.', validation: { min: 1, max: 5 } }),
             quote: fields.text({ label: 'Quote', multiline: true }),
           }),

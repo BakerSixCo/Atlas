@@ -4,10 +4,11 @@ import PageHero from '../components/PageHero.astro';
 import LiveStatus from '../components/LiveStatus.astro';
 import ScheduleData from '../components/ScheduleData.astro';
 import Icon from '../components/Icon.astro';
-import { getTrial, getSettings, getScheduleNotes } from '../lib/content';
+import ReviewQuote from '../components/ReviewQuote.astro';
+import { getTrial, getSettings, getScheduleNotes, getFeaturedReview } from '../lib/content';
 import { getClasses, fmtDays, fmtRange } from '../lib/schedule';
 
-const [trial, settings, classes, notes] = await Promise.all([getTrial(), getSettings(), getClasses(), getScheduleNotes()]);
+const [trial, settings, classes, notes, review] = await Promise.all([getTrial(), getSettings(), getClasses(), getScheduleNotes(), getFeaturedReview('trial')]);
 const tel = settings.phone.replace(/[^\d+]/g, '');
 const siteKey = settings.turnstileSiteKey?.trim() || '';
 const classOptions = classes.map((c) => `${c.title} (${fmtDays(c.days)}, ${fmtRange(c.start, c.end)})`);
@@ -24,6 +25,7 @@ const classOptions = classes.map((c) => `${c.title} (${fmtDays(c.days)}, ${fmtRa
 
   <section class="section section--tight">
     <div class="wrap layout">
+      <div class="main">
       <form class="card form" method="post" action="/api/trial" data-submit-once id="trial-form">
         <h2 class="h3">Request your free trial</h2>
         <div class="field-row">
@@ -76,6 +78,8 @@ const classOptions = classes.map((c) => `${c.title} (${fmtDays(c.days)}, ${fmtRa
         <button class="btn" type="submit">Send my request<Icon name="arrow" /></button>
         {trial.formNote && <p class="form-note">{trial.formNote}</p>}
       </form>
+      {review && <ReviewQuote review={review} />}
+      </div>
 
       <aside class="side">
         <div class="card">
@@ -115,6 +119,7 @@ const classOptions = classes.map((c) => `${c.title} (${fmtDays(c.days)}, ${fmtRa
   .layout { display: grid; gap: 18px; grid-template-columns: 1fr; align-items: start; }
   @media (min-width: 1000px) { .layout { grid-template-columns: 1.1fr 0.9fr; gap: 28px; } .side { position: sticky; top: calc(var(--header-h) + 24px); } }
   .h3 { font-family: var(--font-display); font-variation-settings: 'wdth' 115; font-weight: 800; font-size: 1.35rem; line-height: 1.15; }
+  .main { display: grid; gap: 18px; }
   .form { position: relative; }
   .human { display: grid; gap: 10px; min-height: 65px; }
   .side { display: grid; gap: 18px; }

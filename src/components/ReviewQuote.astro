@@ -1,0 +1,19 @@
+---
+interface Props { review: { quote: string; stars: number | null; name: string; detail: string; source: string } }
+const { review: t } = Astro.props;
+---
+<figure class="review">
+  {t.stars && <p class="stars" role="img" aria-label={`${t.stars} out of 5 stars`}>{'\u2605'.repeat(t.stars)}</p>}
+  <blockquote><p>{t.quote}</p></blockquote>
+  {(t.name || t.detail || t.source) && (
+    <figcaption>{t.name && <strong>{t.name} </strong>}<span>{[t.detail, t.source].filter(Boolean).join(' \u00b7 ')}</span></figcaption>
+  )}
+</figure>
+
+<style>
+  .review { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--red); border-radius: var(--radius); padding: clamp(20px, 3vw, 28px); display: grid; gap: 14px; }
+  .stars { color: #f5b041; letter-spacing: 0.15em; font-size: 1.1rem; line-height: 1; }
+  blockquote p { font-size: 1.1rem; line-height: 1.55; }
+  figcaption { color: var(--muted); font-size: 0.9rem; }
+  figcaption strong { color: var(--text); }
+</style>
