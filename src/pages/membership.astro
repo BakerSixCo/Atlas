@@ -1,0 +1,83 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import PlanCard from '../components/PlanCard.astro';
+import Faq from '../components/Faq.astro';
+import { getMembership, getSettings } from '../lib/content';
+
+const [m, settings] = await Promise.all([getMembership(), getSettings()]);
+const first = m.plans[0];
+const priceText = first ? `${first.price} ${first.period}` : '';
+const description = first
+  ? `${first.name} no-gi jiu-jitsu membership at Atlas Jiu-Jitsu in Meridian, Idaho: ${priceText}. ${m.promise}. Request a free trial first.`
+  : 'Membership at Atlas Jiu-Jitsu in Meridian, Idaho.';
+
+const schema: object[] = [];
+if (first) {
+  const amount = first.price.replace(/[^0-9.]/g, '');
+  schema.push({
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: `${first.name} membership`,
+    serviceType: 'Brazilian Jiu-Jitsu membership',
+    provider: { '@id': new URL('/#gym', Astro.site).href },
+    offers: {
+      '@type': 'Offer',
+      price: amount,
+      priceCurrency: 'USD',
+      url: new URL('/membership', Astro.site).href,
+      availability: 'https://schema.org/InStock',
+      priceSpecification: { '@type': 'UnitPriceSpecification', price: amount, priceCurrency: 'USD', unitText: 'MON' },
+    },
+  });
+}
+if (m.faq.length) {
+  schema.push({
+    '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: m.faq.map((f) => ({ '@type': 'Question', name: f.question, acceptedAnswer: { '@type': 'Answer', text: f.answer } })),
+  });
+}
+---
+<Base
+  title="Jiu-Jitsu Membership in Meridian, ID | Atlas Jiu-Jitsu"
+  description={description}
+  schema={schema}
+  breadcrumbs={[{ name: 'Membership', path: '/membership' }]}
+>
+  <PageHero kicker={m.kicker} title={m.title} accent={m.accent} lede={m.intro} />
+
+  <section class="section section--tight">
+    <div class="wrap layout">
+      <div class="plans">
+        {m.plans.map((p) => <PlanCard plan={p} promise={m.promise} signupUrl={settings.signupUrl} signupLabel={settings.signupLabel === 'Sign up' ? 'Sign up now' : settings.signupLabel} />)}
+      </div>
+      <aside class="card how">
+        <h2 class="h3">{m.howTitle}</h2>
+        <ol>
+          {m.how.map((s, i) => <li><span class="num">{i + 1}</span><div><strong>{s.title}</strong><p class="muted">{s.body}</p></div></li>)}
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  {m.faq.length > 0 && (
+    <section class="section section--surface">
+      <div class="wrap narrow">
+        <div class="section-head"><p class="kicker">Membership questions</p><h2>Straight answers.</h2></div>
+        <Faq items={m.faq} />
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .layout { display: grid; gap: 18px; grid-template-columns: 1fr; align-items: start; }
+  @media (min-width: 1000px) { .layout { grid-template-columns: 1.1fr 0.9fr; gap: 28px; } }
+  .plans { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .h3 { font-family: var(--font-display); font-variation-settings: 'wdth' 115; font-weight: 800; font-size: 1.35rem; line-height: 1.15; }
+  .how ol { list-style: none; padding: 0; display: grid; gap: 18px; margin-top: 18px; }
+  .how li { display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: start; }
+  .num { width: 36px; height: 36px; border-radius: 50%; background: var(--red); color: #fff; display: grid; place-items: center; font-weight: 800; font-family: var(--font-display); }
+  .how p { font-size: 0.95rem; }
+  .narrow { max-width: 880px; }
+</style>

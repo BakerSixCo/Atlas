@@ -1,0 +1,38 @@
+kicker: Membership
+title: One plan.
+accent: Unlimited.
+intro: >-
+  No tiers, no contracts, no guessing. One membership covers your training at
+  Atlas and the gym around it.
+promise: No contracts
+plans:
+  - name: Unlimited
+    subtitle: Atlas Jiu-Jitsu + The Mecca Gym
+    price: $144.99
+    period: per month
+    billing: Billed monthly
+    features:
+      - Unlimited classes
+      - Every class open to all levels
+      - 24/7 access to The Mecca Gym
+howTitle: How to join
+how:
+  - title: Try a class
+    body: Request a free trial, or just show up to any class and introduce yourself.
+  - title: Sign up online
+    body: Join through our membership page in a couple of minutes.
+  - title: Start training
+    body: Pick your classes from the schedule and show up. That's it.
+faq:
+  - question: How much does membership cost?
+    answer: >-
+      Atlas has one plan, Unlimited, billed monthly. The current price is shown
+      at the top of this page.
+  - question: Do I have to sign a contract?
+    answer: No. There are no contracts.
+  - question: Is The Mecca Gym included?
+    answer: Yes. Membership includes 24/7 access to The Mecca Gym.
+  - question: Can I try before I join?
+    answer: >-
+      Yes. Request a free trial, or just show up to any class and introduce
+      yourself to the instructor.

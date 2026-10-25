@@ -17,6 +17,7 @@ Go to **atlas-jiujitsu.com/keystatic**, log in, edit something and hit **Save**.
 | Post a seminar, promotion or result | **News & Alerts → News & Events** → Create |
 | Edit the FAQ, testimonials or instructors | **People** |
 | Change the phone number, email or sign-up link | **Site settings** |
+| Change the membership price | **Pages → Membership & pricing** |
 | Edit the homepage, About page or handbook | **Pages** |
 
 Until a login method is configured (below), `/keystatic` deliberately shows "The site editor is not set up yet" instead of a broken admin page.

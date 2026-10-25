@@ -30,6 +30,7 @@ The admin menu has four groups: Schedule, News & Alerts, Pages and People.
 | Post news, a seminar or a result | News & Alerts → News & Events → Create | Tick the event box for seminars so Google can list them. Tick Draft to keep a post hidden. |
 | Change phone, email, address or sign-up link | News & Alerts → Site settings & alert banner | Then update Google to match. |
 | Change the free trial offer | Pages → Free trial page → The offer | One short line, shown as a red badge. |
+| Change the membership price or what's included | Pages → Membership & pricing | Update the price here only: the home page, membership page and Google data all read from it. Then check the sign-up page in GymMaster shows the same price. |
 | Edit the home page, About page or handbook | Pages → Home page, About page or Student handbook | |
 | Edit a program page (no-gi, wrestling, beginners, open mat) | Pages → Program pages | Don't change a page's web address: old links break. The Google title and description control how it looks in search. |
 | Edit the FAQ, testimonials or instructors | People → FAQ, Testimonials or Instructors | |

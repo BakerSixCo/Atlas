@@ -17,6 +17,7 @@ export const getFaq = async () => (await reader.singletons.faq.read())?.items ??
 export const getTestimonials = async () => (await reader.singletons.testimonials.read())?.items ?? [];
 export const getScheduleNotes = async () =>
   (await reader.singletons.schedule.read()) ?? { intro: '', closures: [] };
+export const getMembership = () => required(reader.singletons.membership.read(), 'Membership');
 export const getTrial = () => required(reader.singletons.trial.read(), 'Free trial page');
 export const getHandbook = () => required(reader.singletons.handbook.read(), 'Handbook');
 

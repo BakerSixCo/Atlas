@@ -65,7 +65,7 @@ export default config({
     navigation: {
       Schedule: ['classes', 'schedule'],
       'News & Alerts': ['posts', 'settings'],
-      Pages: ['trial', 'programs', 'home', 'about', 'handbook'],
+      Pages: ['membership', 'trial', 'programs', 'home', 'about', 'handbook'],
       People: ['instructors', 'testimonials', 'faq'],
     },
   },
@@ -338,6 +338,39 @@ export default config({
           publicPath: '/files/',
         }),
         body: fields.markdoc({ label: 'Handbook', extension: 'md' }),
+      },
+    }),
+
+    membership: singleton({
+      label: 'Membership & pricing',
+      path: 'src/content/membership',
+      format: { data: 'yaml' },
+      schema: {
+        kicker: fields.text({ label: 'Small heading above title' }),
+        title: fields.text({ label: 'Headline (first part)' }),
+        accent: fields.text({ label: 'Headline (red part)' }),
+        intro: fields.text({ label: 'Intro paragraph', multiline: true }),
+        promise: fields.text({ label: 'Promise line', description: 'Short and factual, e.g. "No contracts". Used under the price and in Google.' }),
+        plans: fields.array(
+          fields.object({
+            name: fields.text({ label: 'Plan name', description: 'e.g. Unlimited' }),
+            subtitle: fields.text({ label: 'Subtitle (optional)' }),
+            price: fields.text({ label: 'Price', description: 'Include the symbol, e.g. $144.99' }),
+            period: fields.text({ label: 'Per…', description: 'e.g. per month' }),
+            billing: fields.text({ label: 'Billing note (optional)', description: 'e.g. Billed monthly' }),
+            features: fields.array(fields.text({ label: 'Item' }), { label: "What's included", itemLabel: (p) => p.value }),
+          }),
+          { label: 'Plans', description: 'You can add more plans later. The site shows them side by side.', itemLabel: (p) => `${p.fields.name.value} ${p.fields.price.value}` },
+        ),
+        howTitle: fields.text({ label: 'How to join: title' }),
+        how: fields.array(
+          fields.object({ title: fields.text({ label: 'Step' }), body: fields.text({ label: 'Details', multiline: true }) }),
+          { label: 'How to join', itemLabel: (p) => p.fields.title.value },
+        ),
+        faq: fields.array(
+          fields.object({ question: fields.text({ label: 'Question' }), answer: fields.text({ label: 'Answer', multiline: true }) }),
+          { label: 'Membership questions', itemLabel: (p) => p.fields.question.value },
+        ),
       },
     }),
 

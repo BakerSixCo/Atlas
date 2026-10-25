@@ -43,5 +43,7 @@ export default defineConfig({
     '/checkout': '/',
     '/my-account': '/',
     '/events': '/news',
+    '/pricing': '/membership',
+    '/join': '/membership',
   },
 });

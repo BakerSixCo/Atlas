@@ -1,4 +1,9 @@
 items:
+  - question: How much is membership?
+    answer: >-
+      Atlas has one plan, Unlimited, billed monthly with no contracts. See the
+      current price on the membership page.
+    onHome: true
   - question: Is there a free trial?
     answer: >-
       Yes. Send a quick request on our free trial page, or just show up to any

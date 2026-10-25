@@ -8,16 +8,18 @@ import LiveStatus from '../components/LiveStatus.astro';
 import ScheduleData from '../components/ScheduleData.astro';
 import Faq from '../components/Faq.astro';
 import PostCard from '../components/PostCard.astro';
-import { getHome, getSettings, getFaq, getTestimonials, getInstructors, getPosts, getAbout, getScheduleNotes, getPrograms, renderMarkdoc } from '../lib/content';
+import PlanCard from '../components/PlanCard.astro';
+import { getHome, getSettings, getFaq, getTestimonials, getInstructors, getPosts, getAbout, getScheduleNotes, getPrograms, getMembership, renderMarkdoc } from '../lib/content';
 import { getClasses } from '../lib/schedule';
 import { resolveImage } from '../lib/images';
 import poster from '../assets/images/photos/meet-chase-poster.jpg';
 import figure from '../assets/images/brand/figure.png';
 import { getImage } from 'astro:assets';
 
-const [home, settings, faq, testimonials, instructors, posts, about, notes, classes, allPrograms] = await Promise.all([
-  getHome(), getSettings(), getFaq(), getTestimonials(), getInstructors(), getPosts(), getAbout(), getScheduleNotes(), getClasses(), getPrograms(),
+const [home, settings, faq, testimonials, instructors, posts, about, notes, classes, allPrograms, membership] = await Promise.all([
+  getHome(), getSettings(), getFaq(), getTestimonials(), getInstructors(), getPosts(), getAbout(), getScheduleNotes(), getClasses(), getPrograms(), getMembership(),
 ]);
+const plan = membership.plans[0];
 const programs = allPrograms.filter((p) => p.entry.program !== 'none');
 const head = instructors[0];
 const headBio = head ? renderMarkdoc((await head.entry.bio()).node) : '';
@@ -198,6 +200,21 @@ const noBreak = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').re
     </div>
   </section>
 
+  <!-- ── Membership ── -->
+  {plan && (
+    <section class="section section--surface" id="membership">
+      <div class="wrap member-grid">
+        <div class="member-copy">
+          <p class="kicker">{membership.kicker}</p>
+          <h2>{membership.title}<br /><span class="accent">{membership.accent}</span></h2>
+          <p class="lede">{membership.intro}</p>
+          <a class="link-arrow" href="/membership">Membership details</a>
+        </div>
+        <PlanCard plan={plan} promise={membership.promise} signupUrl={settings.signupUrl} signupLabel="Sign up now" />
+      </div>
+    </section>
+  )}
+
   <!-- ── Testimonials ── -->
   {testimonials.length > 0 && (
     <section class="section">
@@ -363,6 +380,11 @@ const noBreak = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').re
   @media (max-width: 480px) { .perks { grid-template-columns: 1fr; } }
   .gym-photo { border-radius: var(--radius); overflow: hidden; aspect-ratio: 4 / 3; }
   .gym-photo :global(img) { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Membership */
+  .member-grid { display: grid; gap: 40px; align-items: center; grid-template-columns: 1fr; }
+  @media (min-width: 1000px) { .member-grid { grid-template-columns: 1fr 1fr; gap: 72px; } }
+  .member-copy { display: grid; gap: 22px; justify-items: start; }
 
   /* Quotes */
   .quotes { columns: 1; column-gap: 14px; }

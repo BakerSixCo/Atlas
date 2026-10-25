@@ -1,0 +1,34 @@
+---
+import Icon from './Icon.astro';
+interface Plan { name: string; subtitle: string; price: string; period: string; billing: string; features: readonly string[] }
+interface Props { plan: Plan; promise?: string; signupUrl?: string | null; signupLabel?: string }
+const { plan, promise, signupUrl, signupLabel = 'Sign up now' } = Astro.props;
+---
+<article class="plan">
+  <header>
+    <p class="name">{plan.name}</p>
+    {plan.subtitle && <p class="sub">{plan.subtitle}</p>}
+  </header>
+  <p class="price"><span class="amount">{plan.price}</span> <span class="per">{plan.period}</span></p>
+  {(plan.billing || promise) && <p class="fine">{[plan.billing, promise].filter(Boolean).join(' · ')}</p>}
+  <ul>
+    {plan.features.map((f) => <li><Icon name="check" />{f}</li>)}
+  </ul>
+  <div class="btn-row">
+    {signupUrl && <a class="btn" href={signupUrl} rel="noopener" target="_blank">{signupLabel}</a>}
+    <a class="btn btn--ghost" href="/free-trial">Free trial first</a>
+  </div>
+</article>
+
+<style>
+  .plan { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--red); border-radius: var(--radius); padding: clamp(24px, 4vw, 40px); display: grid; gap: 18px; align-content: start; }
+  .name { font-family: var(--font-display); font-variation-settings: 'wdth' 120; font-weight: 850; text-transform: uppercase; font-size: 1.5rem; letter-spacing: 0.02em; }
+  .sub { color: var(--muted); font-size: 0.95rem; }
+  .price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; }
+  .amount { font-family: var(--font-display); font-variation-settings: 'wdth' 118; font-weight: 850; font-size: clamp(3rem, 8vw, 4.5rem); line-height: 1; letter-spacing: -0.02em; }
+  .per { color: var(--muted); font-size: 1.1rem; }
+  .fine { color: var(--red-text); font-weight: 650; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  ul { list-style: none; padding: 0; display: grid; gap: 12px; margin-block: 6px; }
+  li { display: flex; gap: 12px; align-items: flex-start; font-weight: 550; }
+  li :global(svg) { width: 20px; height: 20px; flex: none; margin-top: 3px; color: var(--red-text); stroke-width: 3; }
+</style>
