@@ -424,11 +424,13 @@ export default config({
       schema: {
         items: fields.array(
           fields.object({
-            name: fields.text({ label: 'Name' }),
-            detail: fields.text({ label: 'Detail', description: 'e.g. "Member since 2024" or "Parent & student"' }),
+            name: fields.text({ label: 'Name (optional)', description: 'Leave blank to show the quote without a name.' }),
+            detail: fields.text({ label: 'Detail (optional)', description: 'e.g. "Member since 2024" or "Parent & student"' }),
+            source: fields.text({ label: 'Source (optional)', description: 'e.g. "Google review". Shown under the quote.' }),
+            stars: fields.integer({ label: 'Stars (optional)', description: 'Only for real star ratings, 1 to 5.', validation: { min: 1, max: 5 } }),
             quote: fields.text({ label: 'Quote', multiline: true }),
           }),
-          { label: 'Testimonials', itemLabel: (p) => p.fields.name.value },
+          { label: 'Testimonials', itemLabel: (p) => p.fields.name.value || p.fields.quote.value.slice(0, 40) },
         ),
       },
     }),
