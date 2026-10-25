@@ -4,6 +4,8 @@ A fast, secure static site for Atlas Jiu-Jitsu, built with Astro and hosted on C
 
 ## Editing the site (for owners)
 
+A short plain-English version of this section is in [docs/OWNER-GUIDE.md](docs/OWNER-GUIDE.md).
+
 Go to **atlas-jiujitsu.com/keystatic**, log in, edit something and hit **Save**. The site rebuilds automatically and your change is live in about a minute.
 
 | I want to… | Where in the admin |
