@@ -9,6 +9,7 @@ import { getClasses, fmtDays, fmtRange } from '../lib/schedule';
 
 const [trial, settings, classes, notes] = await Promise.all([getTrial(), getSettings(), getClasses(), getScheduleNotes()]);
 const tel = settings.phone.replace(/[^\d+]/g, '');
+const siteKey = settings.turnstileSiteKey?.trim() || '';
 const classOptions = classes.map((c) => `${c.title} (${fmtDays(c.days)}, ${fmtRange(c.start, c.end)})`);
 ---
 <Base
@@ -65,6 +66,13 @@ const classOptions = classes.map((c) => `${c.title} (${fmtDays(c.days)}, ${fmtRa
           <label for="t-site">Leave this field empty</label>
           <input id="t-site" name="website" type="text" tabindex="-1" autocomplete="off" />
         </div>
+        {siteKey && (
+          <div class="human">
+            <div class="cf-turnstile" data-sitekey={siteKey} data-theme="dark" data-size="flexible"></div>
+            <noscript><p class="form-note">This form needs JavaScript for its spam check. Please call or email us instead.</p></noscript>
+            <p class="form-note">If the check doesn't appear, call {settings.phone} or email {settings.email}.</p>
+          </div>
+        )}
         <button class="btn" type="submit">Send my request<Icon name="arrow" /></button>
         {trial.formNote && <p class="form-note">{trial.formNote}</p>}
       </form>
@@ -98,6 +106,7 @@ const classOptions = classes.map((c) => `${c.title} (${fmtDays(c.days)}, ${fmtRa
       </aside>
     </div>
   </section>
+  {siteKey && <script is:inline async defer src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>}
 </Base>
 
 <style>
@@ -107,6 +116,7 @@ const classOptions = classes.map((c) => `${c.title} (${fmtDays(c.days)}, ${fmtRa
   @media (min-width: 1000px) { .layout { grid-template-columns: 1.1fr 0.9fr; gap: 28px; } .side { position: sticky; top: calc(var(--header-h) + 24px); } }
   .h3 { font-family: var(--font-display); font-variation-settings: 'wdth' 115; font-weight: 800; font-size: 1.35rem; line-height: 1.15; }
   .form { position: relative; }
+  .human { display: grid; gap: 10px; min-height: 65px; }
   .side { display: grid; gap: 18px; }
   .card :global(.live) { margin-block: 14px; }
   .steps { list-style: none; padding: 0; display: grid; gap: 18px; margin-top: 18px; }

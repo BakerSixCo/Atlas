@@ -6,7 +6,7 @@ import { getSettings } from '../../lib/content';
 const settings = await getSettings();
 const tel = settings.phone.replace(/[^\d+]/g, '');
 const title = 'That didn\'t go through.';
-const body = 'Please check your name and email and try again. If it keeps failing, call or email us and we\'ll get you set up.';
+const body = 'Please check your details and try again. If it keeps failing, call or email us and we\'ll get you set up.';
 ---
 <Base title="Something went wrong | Atlas Jiu-Jitsu" description="Free trial request." noindex>
   <section class="section">

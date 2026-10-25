@@ -12,6 +12,8 @@ declare module 'cloudflare:workers' {
         html?: string;
       }): Promise<{ messageId: string }>;
     };
+    /** Turnstile secret key (a Worker secret). When set, the form requires a passed challenge. */
+    TURNSTILE_SECRET_KEY?: string;
     /** KV namespace the Cloudflare adapter provisions for sessions; reused for form rate limiting. */
     SESSION?: {
       get(key: string): Promise<string | null>;

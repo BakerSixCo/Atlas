@@ -46,6 +46,13 @@ Until that's done, submitting shows the "That didn't go through" page, which giv
 
 **How it's protected:** the email binding in `wrangler.jsonc` is locked to your address, so the form can never email anyone else. It also has a hidden trap field for bots, a limit of 5 requests per visitor per hour, input cleaning, and an origin check. For extra protection, add a Cloudflare rate-limiting rule for `/api/trial`.
 
+**Turn on the "I'm not a robot" check (Cloudflare Turnstile, free).** Until you do this the form relies on the basic protections above.
+1. Cloudflare dashboard → **Turnstile → Add widget**. Name it "Atlas free trial". Hostnames: `atlas-jiujitsu.com` and `www.atlas-jiujitsu.com` (add your `*.workers.dev` address too if you want to test before the domain is live). Widget mode: **Managed**. Copy the **Site key** and the **Secret key**.
+2. In the admin → **Site settings** → **Turnstile site key**, paste the site key and save. The widget appears on `/free-trial` after the site rebuilds.
+3. Cloudflare → your Worker → **Settings → Variables and Secrets → Add** → type **Secret**, name `TURNSTILE_SECRET_KEY`, paste the secret key → deploy.
+
+Set **both**. The server only enforces the check once the secret exists, so if you add the secret but forget the site key, visitors can't submit (they see the error page with your phone and email). To switch the check off, delete the secret and clear the site key. Only `/free-trial` loads anything from Cloudflare's challenge domain; every other page keeps the strict security policy.
+
 **Changing the recipient:** edit `destination_address` in `wrangler.jsonc` and `TRIAL_TO` in `src/pages/api/trial.ts` (both must match), and verify the new address in step 2. The offer wording ("Your first week is free.") and all page text are editable in the admin under **Pages → Free trial page**.
 
 ## Deploying (Cloudflare Workers Builds)

@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
+import { verifyTurnstile } from '../../lib/turnstile';
 
 // Server-rendered: runs on Cloudflare at request time, everything else is static.
 export const prerender = false;
@@ -60,6 +61,12 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     await env.SESSION?.put(key, String(count + 1), { expirationTtl: 3600 });
   } catch {
     /* rate limiting is optional; never block a real request because of it */
+  }
+
+  // Human check. Only enforced once the Turnstile secret is configured (see README).
+  if (env.TURNSTILE_SECRET_KEY) {
+    const ok = await verifyTurnstile({ token: form.get('cf-turnstile-response'), secret: env.TURNSTILE_SECRET_KEY, ip });
+    if (!ok) return redirect('/free-trial/error?reason=verify');
   }
 
   if (!env.EMAIL) {

@@ -10,6 +10,12 @@
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
 
+# The free trial page loads Cloudflare's Turnstile widget, so it gets its own policy
+# (the same as above plus challenges.cloudflare.com). Every other page stays strict.
+/free-trial
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com https://challenges.cloudflare.com; style-src 'self'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self' https://cloudflareinsights.com https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; manifest-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
+
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 

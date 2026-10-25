@@ -227,6 +227,10 @@ export default config({
         instagram: fields.url({ label: 'Instagram URL' }),
         facebook: fields.url({ label: 'Facebook URL (optional)' }),
         youtube: fields.url({ label: 'YouTube URL (optional)' }),
+        turnstileSiteKey: fields.text({
+          label: 'Turnstile site key (spam protection for the free trial form)',
+          description: 'Public key from Cloudflare → Turnstile. Leave blank to turn the check off. Set it together with the TURNSTILE_SECRET_KEY secret (see README).',
+        }),
         googleBusinessUrl: fields.url({
           label: 'Google Business Profile link',
           description: 'Your listing\'s "Share" link from Google Maps. Strengthens local search.',
