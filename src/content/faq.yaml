@@ -1,4 +1,9 @@
 items:
+  - question: Is there a free trial?
+    answer: >-
+      Yes. Send a quick request on our free trial page, or just show up to any
+      class and introduce yourself to the instructor.
+    onHome: true
   - question: Do I need any experience to start?
     answer: >-
       Absolutely not. Most of our students started with zero experience. Our

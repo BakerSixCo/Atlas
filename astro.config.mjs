@@ -19,7 +19,7 @@ export default defineConfig({
   integrations: [
     react(),
     keystatic(),
-    sitemap({ filter: (page) => !page.includes('/keystatic') }),
+    sitemap({ filter: (page) => !page.includes('/keystatic') && !/\/free-trial\/(thanks|error)$/.test(page) }),
   ],
   build: {
     format: 'file',

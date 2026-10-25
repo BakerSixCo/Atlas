@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { getSettings } from '../../lib/content';
+
+const settings = await getSettings();
+const tel = settings.phone.replace(/[^\d+]/g, '');
+const title = 'That didn\'t go through.';
+const body = 'Please check your name and email and try again. If it keeps failing, call or email us and we\'ll get you set up.';
+---
+<Base title="Something went wrong | Atlas Jiu-Jitsu" description="Free trial request." noindex>
+  <section class="section">
+    <div class="wrap done">
+      <p class="kicker">Something went wrong</p>
+      <h1>{title}</h1>
+      <p class="lede">{body}</p>
+      <div class="btn-row">
+        <a class="btn" href="/free-trial">Try the form again</a>
+        <a class="btn btn--ghost" href={`tel:${tel}`}><Icon name="phone" />{settings.phone}</a>
+        <a class="btn btn--ghost" href={`mailto:${settings.email}`}><Icon name="mail" />Email us</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .done { display: grid; gap: 22px; justify-items: start; min-height: 50vh; align-content: center; }
+  h1 { font-size: clamp(2.4rem, 7vw, 5rem); max-width: 14ch; }
+</style>

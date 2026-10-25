@@ -1,0 +1,28 @@
+kicker: Free trial
+title: Try Atlas
+accent: free.
+intro: >-
+  Not sure jiu-jitsu is for you? Come find out. Send us a quick note below, or
+  skip the form and just show up to any class and introduce yourself.
+offer: Your first week is free.
+steps:
+  - title: Tell us you're coming
+    body: Fill out the form and we'll email you back. Or skip it. Walk-ins are welcome.
+  - title: Pick a class
+    body: Every class is open to all levels. Check the schedule and choose a time that fits.
+  - title: Show up and say hi
+    body: Arrive 10 minutes early and introduce yourself to the instructor. We'll take it from there.
+bringTitle: What to bring
+bring:
+  - Athletic clothes with no zippers, pockets or buttons
+  - Water
+  - Sandals for walking off the mat
+walkInTitle: Prefer to just show up?
+walkInBody: >-
+  That works too. Come to any class, arrive 10 minutes early, and introduce
+  yourself to the instructor.
+formNote: We only use your details to reply about your trial.
+thanksTitle: You're on the list.
+thanksBody: >-
+  We got your note and will be in touch by email. Want a head start? Check the
+  schedule and come to any class.

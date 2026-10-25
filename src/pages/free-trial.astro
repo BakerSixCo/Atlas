@@ -1,0 +1,121 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import LiveStatus from '../components/LiveStatus.astro';
+import ScheduleData from '../components/ScheduleData.astro';
+import Icon from '../components/Icon.astro';
+import { getTrial, getSettings, getScheduleNotes } from '../lib/content';
+import { getClasses, fmtDays, fmtRange } from '../lib/schedule';
+
+const [trial, settings, classes, notes] = await Promise.all([getTrial(), getSettings(), getClasses(), getScheduleNotes()]);
+const tel = settings.phone.replace(/[^\d+]/g, '');
+const classOptions = classes.map((c) => `${c.title} (${fmtDays(c.days)}, ${fmtRange(c.start, c.end)})`);
+---
+<Base
+  title="Free Jiu-Jitsu Trial in Meridian, ID | Atlas Jiu-Jitsu"
+  description="Try no-gi jiu-jitsu free at Atlas Jiu-Jitsu in Meridian, Idaho. Send a quick note or just show up to any class and introduce yourself."
+  breadcrumbs={[{ name: 'Free trial', path: '/free-trial' }]}
+>
+  <ScheduleData classes={classes} closures={notes.closures} />
+  <PageHero kicker={trial.kicker} title={trial.title} accent={trial.accent} lede={trial.intro}>
+    {trial.offer && <p class="offer"><Icon name="calendar" />{trial.offer}</p>}
+  </PageHero>
+
+  <section class="section section--tight">
+    <div class="wrap layout">
+      <form class="card form" method="post" action="/api/trial" data-submit-once id="trial-form">
+        <h2 class="h3">Request your free trial</h2>
+        <div class="field-row">
+          <div class="field">
+            <label for="t-name">Your name</label>
+            <input class="input" id="t-name" name="name" type="text" autocomplete="name" required maxlength="100" />
+          </div>
+          <div class="field">
+            <label for="t-email">Email</label>
+            <input class="input" id="t-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="200" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="t-phone">Phone <span class="opt">(optional)</span></label>
+            <input class="input" id="t-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" />
+          </div>
+          <div class="field">
+            <label for="t-exp">Jiu-jitsu experience <span class="opt">(optional)</span></label>
+            <select class="select" id="t-exp" name="experience">
+              <option value="">Select one</option>
+              <option>Never trained</option>
+              <option>A little experience</option>
+              <option>Experienced</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="t-class">Which class are you thinking of? <span class="opt">(optional)</span></label>
+          <select class="select" id="t-class" name="class">
+            <option value="">Not sure yet</option>
+            {classOptions.map((o) => <option>{o}</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label for="t-msg">Anything we should know? <span class="opt">(optional)</span></label>
+          <textarea class="textarea" id="t-msg" name="message" maxlength="1000" placeholder="Injuries, questions, goals…"></textarea>
+        </div>
+        <div class="hp" aria-hidden="true">
+          <label for="t-site">Leave this field empty</label>
+          <input id="t-site" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+        <button class="btn" type="submit">Send my request<Icon name="arrow" /></button>
+        {trial.formNote && <p class="form-note">{trial.formNote}</p>}
+      </form>
+
+      <aside class="side">
+        <div class="card">
+          <h2 class="h3">How it works</h2>
+          <ol class="steps">
+            {trial.steps.map((s, i) => (
+              <li><span class="num">{i + 1}</span><div><strong>{s.title}</strong><p class="muted">{s.body}</p></div></li>
+            ))}
+          </ol>
+        </div>
+        <div class="card walkin">
+          <h2 class="h3">{trial.walkInTitle}</h2>
+          <p class="muted">{trial.walkInBody}</p>
+          <LiveStatus />
+          <p class="where"><Icon name="pin" />{settings.locationNote}, {settings.addressLine1}, {settings.addressLine2}</p>
+          <div class="btn-row">
+            <a class="btn btn--ghost btn--sm" href="/schedule"><Icon name="calendar" />Class schedule</a>
+            <a class="btn btn--ghost btn--sm" href={`tel:${tel}`}><Icon name="phone" />{settings.phone}</a>
+          </div>
+        </div>
+        {trial.bring.length > 0 && (
+          <div class="card">
+            <h2 class="h3">{trial.bringTitle}</h2>
+            <ul class="bring">{trial.bring.map((b) => <li>{b}</li>)}</ul>
+            <a class="link-arrow" href="/handbook">Read the student handbook</a>
+          </div>
+        )}
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .offer { display: inline-flex; align-items: center; gap: 10px; justify-self: start; padding: 10px 18px; border-radius: 999px; background: var(--red); color: #fff; font-weight: 700; }
+  .offer :global(svg) { width: 18px; height: 18px; }
+  .layout { display: grid; gap: 18px; grid-template-columns: 1fr; align-items: start; }
+  @media (min-width: 1000px) { .layout { grid-template-columns: 1.1fr 0.9fr; gap: 28px; } .side { position: sticky; top: calc(var(--header-h) + 24px); } }
+  .h3 { font-family: var(--font-display); font-variation-settings: 'wdth' 115; font-weight: 800; font-size: 1.35rem; line-height: 1.15; }
+  .form { position: relative; }
+  .side { display: grid; gap: 18px; }
+  .card :global(.live) { margin-block: 14px; }
+  .steps { list-style: none; padding: 0; display: grid; gap: 18px; margin-top: 18px; }
+  .steps li { display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: start; }
+  .num { width: 36px; height: 36px; border-radius: 50%; background: var(--red); color: #fff; display: grid; place-items: center; font-weight: 800; font-family: var(--font-display); }
+  .steps p { font-size: 0.95rem; }
+  .walkin { display: grid; gap: 4px; }
+  .where { display: flex; gap: 10px; align-items: flex-start; color: var(--muted); font-size: 0.92rem; margin-bottom: 14px; }
+  .where :global(svg) { width: 16px; height: 16px; flex: none; margin-top: 4px; color: var(--red-text); }
+  .bring { margin: 14px 0; padding-left: 1.2em; display: grid; gap: 6px; }
+  .bring li::marker { color: var(--red-text); }
+</style>

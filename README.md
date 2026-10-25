@@ -32,6 +32,22 @@ Choose one of these options.
 1. Run `npm run dev` locally with `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG` unset, then visit `localhost:4321/keystatic` and follow the "create GitHub App" flow.
 2. Copy the generated values into Cloudflare: `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG` as a build variable, and `KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET` and `KEYSTATIC_SECRET` as encrypted secrets.
 
+## Free trial form (emails the gym)
+
+`/free-trial` has a form that emails `atlasjiujitsu90@gmail.com` (the visitor's address is set as Reply-To, so you answer straight from Gmail). It is one small server route, `src/pages/api/trial.ts`, using Cloudflare Email Service. Sending to a verified address of your own is free.
+
+**One-time setup** (needs the domain on Cloudflare DNS first):
+1. Cloudflare dashboard → **Compute → Email Service → Email Routing → Onboard Domain** → `atlas-jiujitsu.com`. Cloudflare adds the DNS records it needs.
+   - If you earlier added a "no email" lockdown (MX `.`, TXT `v=spf1 -all`, `_dmarc` reject), **delete those three records first**. Email Routing needs its own MX and SPF records, and Cloudflare adds a matching DMARC record.
+2. Same page → **Destination addresses** → add `atlasjiujitsu90@gmail.com` and click the verification link Cloudflare emails to it.
+3. Redeploy. Submit the form once on the live site to confirm an email arrives.
+
+Until that's done, submitting shows the "That didn't go through" page, which gives visitors your phone number and email, so no one is silently lost. If the very first deploy complains about the email binding, finish steps 1-2 and retry.
+
+**How it's protected:** the email binding in `wrangler.jsonc` is locked to your address, so the form can never email anyone else. It also has a hidden trap field for bots, a limit of 5 requests per visitor per hour, input cleaning, and an origin check. For extra protection, add a Cloudflare rate-limiting rule for `/api/trial`.
+
+**Changing the recipient:** edit `destination_address` in `wrangler.jsonc` and `TRIAL_TO` in `src/pages/api/trial.ts` (both must match), and verify the new address in step 2. The offer wording ("Your first week is free.") and all page text are editable in the admin under **Pages → Free trial page**.
+
 ## Deploying (Cloudflare Workers Builds)
 
 - **Repo:** `BakerSixCo/Atlas`, branch `main`
@@ -63,7 +79,7 @@ npm run preview  # run the build in the real Cloudflare runtime
 
 ### SEO
 
-- **Program pages** (`/programs/*`) target the searches people actually make ("no-gi jiu-jitsu Meridian", "wrestling classes Meridian", "jiu-jitsu for beginners"). Each one has its own Google title and description fields in the admin, so keep the main phrase first.
+- **Program pages** (`/programs/*`) target the searches people actually make ("no-gi jiu-jitsu Meridian", "adult wrestling Meridian", "jiu-jitsu for beginners"). Each one has its own Google title and description fields in the admin, so keep the main phrase first.
 - **Structured data:** every page tells Google the gym's name, address, phone, class hours, service area and founder. Program pages add Service + FAQ markup. News posts marked as events produce Event listings.
 - **Fill in once** under **Site settings**: the Google Business Profile link, the review link, and latitude/longitude.
 - Old WordPress URLs 301-redirect to the new pages; `sitemap-index.xml` is generated on every build.

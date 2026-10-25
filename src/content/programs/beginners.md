@@ -47,6 +47,10 @@ faq:
 
 You'll warm up with the group, then learn one technique broken down step by step and drill it with a partner. At the end of class there's optional live sparring. Sit it out or roll lightly — it's your call, and nobody will push you.
 
+## Try it free
+
+We offer a free trial. [Request yours online](/free-trial), or just show up to any class and introduce yourself to the instructor.
+
 ## After your first class
 
 Most people leave tired, a little confused, and wanting to come back. That's normal. Jiu-jitsu clicks with consistency: two or three classes a week is the sweet spot.

@@ -165,3 +165,15 @@ document.querySelectorAll<HTMLButtonElement>('[data-video-play]').forEach((btn) 
     void video.play();
   });
 });
+
+/* ── Forms: stop double submits (and undo it if the visitor comes back with the Back button) ── */
+document.querySelectorAll<HTMLFormElement>('form[data-submit-once]').forEach((form) => {
+  const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+  if (!btn) return;
+  const label = btn.innerHTML;
+  form.addEventListener('submit', () => {
+    // Defer so the browser still includes the form data in the request.
+    setTimeout(() => { btn.disabled = true; btn.textContent = 'Sending…'; }, 0);
+  });
+  window.addEventListener('pageshow', () => { btn.disabled = false; btn.innerHTML = label; });
+});

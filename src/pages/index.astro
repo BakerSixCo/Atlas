@@ -49,7 +49,7 @@ const noBreak = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').re
       </h1>
       <p class="lede">{home.heroSubtitle}</p>
       <div class="btn-row">
-        {settings.signupUrl && <a class="btn" href={settings.signupUrl} rel="noopener" target="_blank">{settings.signupLabel}<Icon name="arrow" /></a>}
+        <a class="btn" href="/free-trial">Free trial<Icon name="arrow" /></a>
         <a class="btn btn--ghost" href="/schedule"><Icon name="calendar" />Class schedule</a>
       </div>
       <LiveStatus class="hero-live" />
@@ -253,7 +253,7 @@ const noBreak = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').re
         <p>Show up. We'll take it from there.</p>
       </div>
       <div class="btn-row">
-        {settings.signupUrl && <a class="btn btn--light" href={settings.signupUrl} rel="noopener" target="_blank">{settings.signupLabel}</a>}
+        <a class="btn btn--light" href="/free-trial">Start your free trial</a>
         <a class="btn btn--ghost" href={`tel:${tel}`}><Icon name="phone" />{settings.phone}</a>
       </div>
     </div>

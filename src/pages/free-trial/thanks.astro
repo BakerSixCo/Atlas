@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { getTrial, getSettings } from '../../lib/content';
+
+const [trial, settings] = await Promise.all([getTrial(), getSettings()]);
+const tel = settings.phone.replace(/[^\d+]/g, '');
+const title = trial.thanksTitle;
+const body = trial.thanksBody;
+---
+<Base title="Thank you | Atlas Jiu-Jitsu" description="Free trial request." noindex>
+  <section class="section">
+    <div class="wrap done">
+      <p class="kicker">Request received</p>
+      <h1>{title}</h1>
+      <p class="lede">{body}</p>
+      <div class="btn-row">
+        <a class="btn" href="/schedule"><Icon name="calendar" />See the schedule</a>
+        <a class="btn btn--ghost" href="/">Back to home</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .done { display: grid; gap: 22px; justify-items: start; min-height: 50vh; align-content: center; }
+  h1 { font-size: clamp(2.4rem, 7vw, 5rem); max-width: 14ch; }
+</style>

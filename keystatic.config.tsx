@@ -65,7 +65,7 @@ export default config({
     navigation: {
       Schedule: ['classes', 'schedule'],
       'News & Alerts': ['posts', 'settings'],
-      Pages: ['programs', 'home', 'about', 'handbook'],
+      Pages: ['trial', 'programs', 'home', 'about', 'handbook'],
       People: ['instructors', 'testimonials', 'faq'],
     },
   },
@@ -334,6 +334,33 @@ export default config({
           publicPath: '/files/',
         }),
         body: fields.markdoc({ label: 'Handbook', extension: 'md' }),
+      },
+    }),
+
+    trial: singleton({
+      label: 'Free trial page',
+      path: 'src/content/trial',
+      format: { data: 'yaml' },
+      schema: {
+        kicker: fields.text({ label: 'Small heading above title' }),
+        title: fields.text({ label: 'Headline (first part)' }),
+        accent: fields.text({ label: 'Headline (red part)' }),
+        intro: fields.text({ label: 'Intro paragraph', multiline: true }),
+        offer: fields.text({
+          label: 'The offer',
+          description: 'One short line shown as a badge, e.g. "Your first week is free." Edit this if the trial terms change.',
+        }),
+        steps: fields.array(
+          fields.object({ title: fields.text({ label: 'Step' }), body: fields.text({ label: 'Details', multiline: true }) }),
+          { label: 'How it works', itemLabel: (p) => p.fields.title.value },
+        ),
+        bringTitle: fields.text({ label: 'What to bring: title' }),
+        bring: fields.array(fields.text({ label: 'Item' }), { label: 'What to bring', itemLabel: (p) => p.value }),
+        walkInTitle: fields.text({ label: 'Walk-in box: title' }),
+        walkInBody: fields.text({ label: 'Walk-in box: text', multiline: true }),
+        formNote: fields.text({ label: 'Small print under the form', multiline: true }),
+        thanksTitle: fields.text({ label: 'Thank-you page: title' }),
+        thanksBody: fields.text({ label: 'Thank-you page: text', multiline: true }),
       },
     }),
 

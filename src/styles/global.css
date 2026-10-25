@@ -50,6 +50,8 @@ body {
 img, video, svg { display: block; max-width: 100%; height: auto; }
 /* <picture> is only a format wrapper; let the <img> size against the real container. */
 picture { display: contents; }
+/* Author display rules (flex, grid…) must never beat the HTML hidden attribute. */
+[hidden] { display: none !important; }
 .nowrap { white-space: nowrap; }
 input, button, textarea, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
@@ -203,3 +205,30 @@ h3 {
   }
 }
 @keyframes reveal { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+
+/* ───────────────────────── Forms ───────────────────────── */
+.form { display: grid; gap: 18px; }
+.field { display: grid; gap: 8px; }
+.field label, .field .label { font-weight: 650; font-size: 0.95rem; }
+.field .opt { color: var(--muted); font-weight: 500; }
+.input, .select, .textarea {
+  width: 100%; min-height: 52px; padding: 0 16px;
+  background: var(--surface-2); color: var(--text);
+  border: 1px solid #3a3a3a; border-radius: var(--radius-sm);
+  transition: border-color 0.2s, background 0.2s;
+}
+.textarea { min-height: 120px; padding-block: 14px; resize: vertical; line-height: 1.5; }
+.select {
+  appearance: none; -webkit-appearance: none; padding-right: 44px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a6a6a1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center; background-size: 20px;
+}
+.input:hover, .select:hover, .textarea:hover { border-color: #5a5a5a; }
+.input:focus-visible, .select:focus-visible, .textarea:focus-visible { outline: 3px solid var(--red-text); outline-offset: 2px; border-color: transparent; }
+.input::placeholder, .textarea::placeholder { color: #77776f; }
+.field-row { display: grid; gap: 18px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .field-row { grid-template-columns: 1fr 1fr; } }
+/* Honeypot: invisible to people and screen readers, tempting to bots. */
+.hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.form-note { color: var(--muted); font-size: 0.88rem; }
+.btn:disabled { opacity: 0.6; cursor: progress; transform: none; }

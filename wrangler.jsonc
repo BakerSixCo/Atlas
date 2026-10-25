@@ -5,5 +5,8 @@
   "name": "atlas-jiujitsu",
   "compatibility_date": "2026-10-12",
   "compatibility_flags": ["nodejs_compat"],
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  // Free-trial form emails. Locked to this one address, so the form can never email anyone else.
+  // Requires: domain on Cloudflare DNS + Email Routing enabled + this address verified (README).
+  "send_email": [{ "name": "EMAIL", "destination_address": "atlasjiujitsu90@gmail.com" }]
 }

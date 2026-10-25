@@ -2,12 +2,12 @@
 title: Wrestling
 order: 2
 program: wrestling
-seoTitle: Wrestling Classes in Meridian, ID | Atlas Jiu-Jitsu
+seoTitle: Adult Wrestling Classes in Meridian, ID | Atlas Jiu-Jitsu
 seoDescription: >-
-  Wrestling in Meridian, Idaho. Tuesday night takedowns, scrambles and top
-  pressure for grapplers of every level at Atlas Jiu-Jitsu.
+  Adult wrestling in Meridian, Idaho. Tuesday night takedowns, scrambles and
+  top pressure for adult grapplers of every level at Atlas Jiu-Jitsu.
 kicker: Program · Wrestling
-heading: Wrestling in Meridian.
+heading: Adult wrestling in Meridian.
 intro: >-
   Tuesday nights are for takedowns. Build the standup, scrambles, and top
   pressure that make your jiu-jitsu dangerous from the very first grip.
@@ -24,8 +24,8 @@ highlights:
   - title: All levels
     body: Never wrestled? You'll learn stance, motion, and safe breakfalls before anything else.
 faq:
-  - question: Do I need wrestling experience?
-    answer: No. The class is open to all levels and starts from stance and movement.
+  - question: Who is the wrestling class for?
+    answer: Adults of every level. No wrestling experience is needed; the class starts from stance and movement.
   - question: Is this the same as jiu-jitsu?
     answer: >-
       No — wrestling focuses on takedowns and top control. It complements
