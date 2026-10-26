@@ -63,7 +63,7 @@ Set **both**. The server only enforces the check once the secret exists, so if y
 - **Repo:** `BakerSixCo/Atlas`, branch `main`
 - **Build command:** `npm run build`
 - **Deploy command:** `npx wrangler deploy`
-- **Worker name:** `atlas-jiujitsu` (this must match `name` in `wrangler.jsonc`; change one to match the other)
+- **Worker name:** `atlas` (this must match `name` in `wrangler.jsonc`; change one to match the other)
 - **Custom domain:** add `atlas-jiujitsu.com` and `www` under Worker → Settings → Domains & Routes, then remove the old WordPress DNS records.
 
 Every push to `main` deploys, and so does every save in the CMS.

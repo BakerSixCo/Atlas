@@ -2,7 +2,7 @@
 // "name" must match the Worker name in the Cloudflare dashboard.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "atlas-jiujitsu",
+  "name": "atlas",
   "compatibility_date": "2026-10-12",
   "compatibility_flags": ["nodejs_compat"],
   "observability": { "enabled": true },
