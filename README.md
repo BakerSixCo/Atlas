@@ -56,6 +56,8 @@ If email is ever down, submitting shows the "That didn't go through" page, which
 
 Set **both**. The server only enforces the check once the secret exists, so if you add the secret but forget the site key, visitors can't submit (they see the error page with your phone and email). To switch the check off, delete the secret and clear the site key. Only `/free-trial` loads anything from Cloudflare's challenge domain; every other page keeps the strict security policy.
 
+**Public address vs. delivery address:** the site shows `info@atlas-jiujitsu.com` (Site settings → Email), which Email Routing forwards to the gym Gmail. The form itself still delivers straight to `atlasjiujitsu90@gmail.com`, because the email binding can only send to a verified destination address.
+
 **Changing the recipient:** edit `destination_address` in `wrangler.jsonc` and `TRIAL_TO` in `src/pages/api/trial.ts` (both must match), and verify the new address in step 2. The offer wording ("Your first week is free.") and all page text are editable in the admin under **Pages → Free trial page**.
 
 ## Deploying (Cloudflare Workers Builds)

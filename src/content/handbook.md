@@ -101,4 +101,4 @@ Atlas uses a no-gi ranking system based on skill, time on the mat, and contribut
 
 ## Questions?
 
-Talk to an instructor any time, or email us at [atlasjiujitsu90@gmail.com](mailto:atlasjiujitsu90@gmail.com).
+Talk to an instructor any time, or email us at [info@atlas-jiujitsu.com](mailto:info@atlas-jiujitsu.com).
