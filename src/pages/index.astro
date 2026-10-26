@@ -26,7 +26,7 @@ const headBio = head ? renderMarkdoc((await head.entry.bio()).node) : '';
 const headPhoto = resolveImage(head?.entry.photo);
 const posterImg = await getImage({ src: poster, width: 720, format: 'webp' });
 const tel = settings.phone.replace(/[^\d+]/g, '');
-const lineage = ['Pedro Sauer', 'Keith Owen', 'Josh Arentz & Todd Richards', head?.entry.name ?? 'Chase Riddick'];
+const lineage = ['Pedro Sauer', 'Keith Owen', 'Josh Arentz', head?.entry.name ?? 'Chase Riddick'];
 const homeFaq = faq.filter((f) => f.onHome).slice(0, 6);
 const [titleA, titleB] = (home.heroTitle || 'No egos. Just jiu-jitsu.').split(/(?<=\.)\s+/);
 // Keep hyphenated words ("jiu-jitsu") on one line.

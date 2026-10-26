@@ -69,7 +69,7 @@ Photos, logos, videos and the handbook PDF are in `assets/`.
 
 ### Meet your instructor: Chase Riddick
 
-Atlas Jiu-Jitsu was founded by a black belt under the lineage of the late Keith Owen, a respected Pedro Sauer black belt. After Keith's passing, the journey continued, with black belt promotion awarded by two of his most senior students, Josh Arentz and Todd Richards.
+Atlas Jiu-Jitsu was founded by a black belt under the lineage of the late Keith Owen, a respected Pedro Sauer black belt. After Keith's passing, the journey continued, with black belt promotion awarded by Josh Arentz, one of his most senior students.
 
 Our head instructor created Atlas with a clear vision: *to build a non-traditional studio that's free from politics, drama, and ego, a place where people simply train hard and love the art of jiu-jitsu.*
 
