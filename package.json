@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "check:content": "node scripts/check-content.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.4.2",
