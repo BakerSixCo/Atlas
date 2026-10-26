@@ -4,18 +4,17 @@ Edit anything on the site at **atlas-jiujitsu.com/keystatic**: press Save and th
 
 (A shareable, editable copy of this guide also lives in your Claude Docs: "Atlas Website: Owner's Guide".)
 
-## One-time setup (not done yet)
+## Setup status
 
-Tick these off as you go. The [README](../README.md) has the step-by-step for each.
+Done: site live on atlas-jiujitsu.com, admin login (Keystatic Cloud), free trial email (Email Routing), spam check (Turnstile).
 
-- [ ] Move the domain to Cloudflare: add the domain, switch the nameservers at Hostinger, then transfer the registrar
-- [ ] Attach atlas-jiujitsu.com and www to the Worker, then remove the old WordPress DNS records
-- [ ] Turn on email: Cloudflare → Email Service → Email Routing → onboard the domain and verify atlasjiujitsu90@gmail.com (delete any "no email" records first)
-- [ ] Set up the admin login (Keystatic Cloud, free) and add it in Cloudflare
-- [ ] Turn on the spam check: Cloudflare Turnstile site key in the admin, secret key in Cloudflare
-- [ ] Update Google Business Profile hours to match the class schedule on the site, and add the review link and map coordinates in the admin's Site settings
+Still to do:
+
+- [ ] Turn off the temporary `workers.dev` address (Cloudflare → Worker `atlas` → Domains)
+- [ ] Update Google Business Profile: website link, hours matching the schedule, sign-up link. Add the review link and map coordinates in the admin's Site settings
 - [ ] Add the site to Google Search Console and submit https://atlas-jiujitsu.com/sitemap-index.xml
-- [ ] Send yourself a test free-trial request and confirm the email arrives
+- [ ] Ask The Mecca Gym to link to the new site
+- [ ] Move the domain registrar from Hostinger to Cloudflare, then cancel Hostinger (see [DOMAIN-NOTES](DOMAIN-NOTES.md))
 
 ## Everyday jobs
 
@@ -49,7 +48,6 @@ The admin menu has four groups: Schedule, News & Alerts, Pages and People.
 ## If something looks wrong
 
 - **My change isn't showing.** Wait three minutes, then refresh the page (Ctrl+Shift+R on Windows, Cmd+Shift+R on Mac).
-- **The admin says "The site editor is not set up yet."** The admin login hasn't been configured. See the setup checklist above.
-- **The free trial form says "That didn't go through."** Email isn't set up yet, or the spam check failed. Visitors see your phone and email as a backup. Check Cloudflare → Email Service.
-- **The old WordPress site still appears.** The domain's DNS still points at Hostinger. Finish the domain steps in the setup checklist.
+- **The admin says "The site editor is not set up yet."** The Keystatic login setting was lost. See "One-time CMS login setup" in the README.
+- **The free trial form says "That didn't go through."** The spam check failed or email sending is down. Visitors see your phone and email as a backup. Check Cloudflare → Email Service.
 - **Anything else.** Ask Claude in your project chat, or check the README in the GitHub repo.
