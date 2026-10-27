@@ -54,8 +54,8 @@ const schema = people.map((p) => ({
       <div class="section-head"><p class="kicker">Instructors</p><h2>Who you'll train with.</h2></div>
       <div class="people">
         {people.map((p) => (
-          <article class="person">
-            <div class="person-img">{p.img && <Image src={p.img} alt={`${p.name}, ${p.role}`} widths={[400, 700, 1000]} sizes="(min-width: 1000px) 35vw, 90vw" format="webp" />}</div>
+          <article class={p.img ? 'person' : 'person person--solo'}>
+            {p.img && <div class="person-img"><Image src={p.img} alt={`${p.name}, ${p.role}`} widths={[400, 700, 1000]} sizes="(min-width: 1000px) 35vw, 90vw" format="webp" /></div>}
             <div class="person-body">
               <h3 class="name">{p.name}</h3>
               <p class="role">{[p.rank, p.role].filter(Boolean).join(' · ')}</p>
@@ -98,6 +98,8 @@ const schema = people.map((p) => ({
   .people { display: grid; gap: 64px; }
   .person { display: grid; gap: 32px; grid-template-columns: 1fr; align-items: center; }
   @media (min-width: 900px) { .person { grid-template-columns: 0.8fr 1.2fr; gap: 64px; } }
+  .person--solo { display: block; }
+  .person--solo .person-body { max-width: 62ch; border-top: 1px solid var(--line, rgba(255,255,255,0.12)); padding-top: 32px; }
   .person-img { background: radial-gradient(circle at 50% 60%, rgba(182,13,47,0.45), transparent 65%); border-radius: var(--radius); max-width: 480px; margin-inline: auto; width: 100%; }
   .person-img :global(img) { width: 100%; -webkit-mask-image: linear-gradient(180deg, #000 78%, transparent); mask-image: linear-gradient(180deg, #000 78%, transparent); }
   .name { font-size: clamp(2rem, 4vw, 3rem); text-transform: uppercase; font-variation-settings: 'wdth' 125; font-weight: 850; }
