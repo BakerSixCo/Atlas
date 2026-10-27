@@ -1,6 +1,6 @@
 ---
 name: Jake Blanchard
-role: Instructor
+role: Lead Instructor
 rank: Black belt
 order: 2
 photo: null
